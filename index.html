@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="ro">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Unde e Bubu?</title>
+  <meta name="description" content="Joc de Crăciun pentru clasa pregătitoare: Bubu se joacă de-a v-ați ascunselea în camera cu bradul. Copiii o caută cu un clic.">
+  <meta name="theme-color" content="#0b1a3a">
+  <link rel="icon" href="favicon.ico" sizes="48x48">
+  <link rel="icon" href="assets/icon-192.png" type="image/png" sizes="192x192">
+  <link rel="preload" href="assets/bubu.webp" as="image" type="image/webp">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <h1 class="sr-only">Unde e Bubu?</h1>
+
+  <!-- The game is drawn on this canvas (js/game.js) -->
+  <canvas id="game" aria-label="Jocul Unde e Bubu?: fă clic pe lucrurile din cameră ca s-o găsești pe Bubu"></canvas>
+
+  <!-- ===== Buttons always on screen (icons only: the children cannot read yet) ===== -->
+  <nav class="hud" aria-label="Comenzi">
+    <button class="hud-btn" id="btnFullscreen" type="button" title="Ecran mare" aria-label="Ecran mare">⛶</button>
+  </nav>
+
+  <!-- ===== Start screen ===== -->
+  <section class="start" id="start" aria-label="Început">
+    <p class="start-title" aria-hidden="true">Unde e Bubu?</p>
+    <button class="play-btn" id="btnPlay" type="button" aria-label="Începe jocul">▶</button>
+    <!-- Teacher button: the story, to read on the interactive board -->
+    <button class="book-btn" id="btnBook" type="button" title="Povestea" aria-label="Povestea">📖</button>
+  </section>
+
+  <!-- ===== Story book (read by the teacher on the interactive board) ===== -->
+  <section class="book" id="book" aria-label="Povestea" hidden>
+    <div class="book-page">
+      <div class="book-art" id="bookArt" aria-hidden="true"></div>
+      <p class="book-text" id="bookText"></p>
+    </div>
+    <div class="book-nav">
+      <button class="book-arrow" id="bookPrev" type="button" aria-label="Pagina anterioară">◀</button>
+      <div class="book-dots" id="bookDots" aria-hidden="true"></div>
+      <button class="book-arrow" id="bookNext" type="button" aria-label="Pagina următoare">▶</button>
+    </div>
+    <button class="book-close" id="bookClose" type="button" aria-label="Închide povestea">✕</button>
+  </section>
+
+  <!-- ===== Replay button shown at the end ===== -->
+  <button class="play-btn play-btn--again" id="btnAgain" type="button" aria-label="Joacă din nou" hidden>🔁</button>
+
+  <noscript><p class="noscript">Pentru acest joc trebuie activat JavaScript în browser.</p></noscript>
+
+  <script src="js/engine.js"></script>
+  <script src="js/art.js"></script>
+  <script src="js/game.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

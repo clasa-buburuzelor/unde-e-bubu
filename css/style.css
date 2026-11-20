@@ -1,0 +1,238 @@
+/* Bubu salvează Crăciunul — page chrome around the canvas.
+   Everything inside the game is drawn on the canvas; here are only the
+   big icon buttons, the start screen and the story book. */
+
+:root {
+  --night: #0b1a3a;
+  --night-2: #13295a;
+  --snow: #f4f8ff;
+  --red: #e53935;
+  --red-dark: #b71c1c;
+  --green: #2e9d57;
+  --gold: #ffcf3f;
+  --ink: #1b2440;
+  --paper: #fffaf0;
+  --font: 'Baloo 2', 'Comic Sans MS', system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: var(--night);
+  color: var(--snow);
+  font-family: var(--font);
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+}
+
+#game {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  cursor: pointer;
+}
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+button { font-family: inherit; cursor: pointer; }
+button:focus-visible { outline: 4px solid var(--gold); outline-offset: 3px; }
+[hidden] { display: none !important; }
+
+/* ---------- HUD (top right) ---------- */
+.hud {
+  position: fixed;
+  top: max(10px, env(safe-area-inset-top));
+  right: max(10px, env(safe-area-inset-right));
+  display: flex;
+  gap: 10px;
+  z-index: 20;
+}
+.hud-btn {
+  width: 62px; height: 62px;
+  border-radius: 50%;
+  border: 3px solid rgba(255, 255, 255, .85);
+  background: rgba(19, 41, 90, .75);
+  color: #fff;
+  font-size: 30px;
+  line-height: 1;
+  display: grid; place-items: center;
+  box-shadow: 0 4px 0 rgba(0, 0, 0, .3);
+  transition: transform .12s;
+}
+.hud-btn:active { transform: translateY(3px) scale(.96); box-shadow: 0 1px 0 rgba(0, 0, 0, .3); }
+#btnHelp { background: rgba(46, 157, 87, .9); }
+
+/* ---------- Start screen ---------- */
+.start {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 7vh;
+  pointer-events: none;
+}
+.start > * { pointer-events: auto; }
+.start-title {
+  margin: 0 16px;
+  font-size: clamp(34px, 6.5vw, 84px);
+  font-weight: 800;
+  line-height: 1.05;
+  text-align: center;
+  color: #fff;
+  text-shadow: 0 4px 0 var(--red-dark), 0 8px 24px rgba(0, 0, 0, .5);
+}
+
+.play-btn {
+  margin-top: 4vh;
+  width: clamp(140px, 22vmin, 220px);
+  height: clamp(140px, 22vmin, 220px);
+  border-radius: 50%;
+  border: 8px solid #fff;
+  background: radial-gradient(circle at 35% 30%, #5fd68a, var(--green) 60%, #1d6e3b);
+  color: #fff;
+  font-size: clamp(64px, 11vmin, 110px);
+  line-height: 1;
+  padding-left: .12em;
+  box-shadow: 0 10px 0 #155a30, 0 20px 40px rgba(0, 0, 0, .45);
+  animation: pulse 1.6s ease-in-out infinite;
+}
+.play-btn:active { transform: translateY(6px); box-shadow: 0 4px 0 #155a30; animation: none; }
+.play-btn--again {
+  position: fixed;
+  right: max(24px, 3vw);
+  bottom: max(24px, 4vh);
+  margin: 0;
+  z-index: 15;
+  padding-left: 0;
+  width: clamp(110px, 16vmin, 160px);
+  height: clamp(110px, 16vmin, 160px);
+  font-size: clamp(54px, 8vmin, 80px);
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.07); }
+}
+
+.book-btn {
+  position: fixed;
+  left: max(14px, env(safe-area-inset-left));
+  bottom: max(14px, env(safe-area-inset-bottom));
+  width: 84px; height: 84px;
+  border-radius: 22px;
+  border: 4px solid #fff;
+  background: #8d5524;
+  font-size: 46px;
+  line-height: 1;
+  box-shadow: 0 6px 0 #5a3414;
+  touch-action: none;
+}
+
+/* ---------- Story book ---------- */
+.book {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  background: rgba(6, 14, 34, .92);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  gap: 16px;
+}
+.book-page {
+  width: min(1200px, 100%);
+  max-height: calc(100% - 110px);
+  background: var(--paper);
+  color: var(--ink);
+  border-radius: 28px;
+  border: 6px solid #c9a46a;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, .5);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
+  align-items: center;
+  gap: 24px;
+  padding: clamp(16px, 3vw, 40px);
+  overflow: auto;
+}
+.book-art {
+  aspect-ratio: 1;
+  border-radius: 22px;
+  background: linear-gradient(#0e2250, #2a4c8f 70%, #e8f0ff 70%);
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  font-size: clamp(48px, 9vw, 120px);
+  line-height: 1;
+}
+.book-art .a { position: absolute; }
+.book-art img { position: absolute; width: 42%; }
+.book-art .wiggle { animation: wiggle 2.4s ease-in-out infinite; }
+.book-art .float { animation: float 3s ease-in-out infinite; }
+.book-art .fly { animation: fly 6s linear infinite; }
+@keyframes wiggle { 0%, 100% { transform: rotate(-6deg); } 50% { transform: rotate(6deg); } }
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10%); } }
+@keyframes fly { from { transform: translateX(120%); } to { transform: translateX(-160%); } }
+.book-art.map {
+  background: linear-gradient(#cfe3ff, #f4f8ff);
+  font-size: clamp(30px, 5vw, 64px);
+}
+.book-text {
+  margin: 0;
+  font-size: clamp(24px, 3vw, 42px);
+  line-height: 1.35;
+  font-weight: 600;
+}
+.book-text b { color: var(--red-dark); }
+.book-nav { display: flex; align-items: center; gap: 24px; }
+.book-arrow {
+  width: 84px; height: 84px;
+  border-radius: 50%;
+  border: 4px solid #fff;
+  background: var(--red);
+  color: #fff;
+  font-size: 40px;
+  box-shadow: 0 6px 0 var(--red-dark);
+}
+.book-arrow:disabled { opacity: .3; cursor: default; }
+.book-arrow.is-start { background: var(--green); box-shadow: 0 6px 0 #155a30; width: 110px; height: 110px; font-size: 56px; }
+.book-dots { display: flex; gap: 10px; }
+.book-dots span { width: 16px; height: 16px; border-radius: 50%; background: rgba(255, 255, 255, .35); }
+.book-dots span.on { background: var(--gold); }
+.book-close {
+  position: absolute; top: 16px; right: 16px;
+  width: 60px; height: 60px; border-radius: 50%;
+  border: 3px solid #fff; background: transparent; color: #fff; font-size: 30px;
+}
+
+@media (max-width: 760px), (max-aspect-ratio: 1/1) {
+  .book-page { grid-template-columns: 1fr; }
+  .book-nav { gap: 12px; }
+  .book-arrow { width: 64px; height: 64px; font-size: 30px; }
+  .book-arrow.is-start { width: 84px; height: 84px; font-size: 42px; }
+  .book-art { max-height: 38vh; justify-self: center; width: min(100%, 38vh); }
+}
+
+.noscript {
+  position: fixed; inset: 0; display: grid; place-items: center;
+  font-size: 28px; text-align: center; padding: 24px; background: var(--night);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .play-btn, .book-art * { animation: none !important; }
+}
