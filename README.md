@@ -9,7 +9,7 @@ Bubu se joacă de-a v-ați ascunselea în opt locuri, pe rând unul în casă ș
 
 Apoi se stinge lumina 🙈 și Bubu se ascunde în alt loc. După 3 steluțe se trece în locul următor. Sunt 24 de runde în total și jocul durează cam 7–8 minute. La final, toți prietenii ies să petreacă împreună cu Bubu și apare „Crăciun fericit!”. Butonul 🔁 pornește jocul din nou.
 
-Din clipa în care se aprinde lumina, Bubu trage cu ochiul de după ascunzătoare: i se văd căciulița roșie și creștetul capului, iar restul ei rămâne ascuns. Ea se leagănă puțin. Așa jocul e ușor spre mediu. Jocul nu are mânuță care să arate unde trebuie dat clic, nu are sunet, nu are cronometru și nu se poate greși.
+Din clipa în care se aprinde lumina, Bubu trage cu ochiul de după ascunzătoare: i se văd căciulița roșie și creștetul capului (ochii nu), iar restul ei rămâne ascuns. Ea se leagănă puțin. Așa jocul are o dificultate medie. Jocul nu are mânuță care să arate unde trebuie dat clic, nu are sunet, nu are cronometru și nu se poate greși.
 
 ## Pentru profesor
 

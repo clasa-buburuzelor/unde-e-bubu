@@ -67,7 +67,7 @@
       },
       {
         id: 'tree', hit: { x: 90, y: 280, w: 320, h: 570 },
-        from: { x: 230, y: 650 }, to: { x: 95, y: 560 }, tip: { x: 325, y: 565, a: 0, s: 100 },
+        from: { x: 230, y: 650 }, to: { x: 95, y: 560 }, tip: { x: 342, y: 565, a: 0, s: 100 },
         draw(c) {
           Art.bigTree(c, 250, 850, 560);
           const balls = [[200, 440, '#e53935'], [300, 520, '#1e88e5'], [180, 620, '#fbc02d'], [330, 680, '#8e44ad'], [250, 360, '#43a047'], [140, 740, '#ec407a'], [280, 760, '#fb8c00']];
@@ -250,7 +250,7 @@
       },
       {
         id: 'pine', hit: { x: 70, y: 300, w: 320, h: 570 },
-        from: { x: 230, y: 650 }, to: { x: 85, y: 560 }, tip: { x: 322, y: 775, a: 0, s: 100 },
+        from: { x: 230, y: 650 }, to: { x: 85, y: 560 }, tip: { x: 338, y: 775, a: 0, s: 100 },
         draw(c) { Art.pine(c, 230, 880, 560, '#1b5e3a'); }
       },
       {
@@ -1164,8 +1164,8 @@
 
   /**
    * Bubu peeks out of her hiding place with her red hat on and wiggles
-   * (easy-medium: the hat and the top of her head show, the rest of her
-   * stays behind the object). t = { x, y, a, s? }: the point on the edge of
+   * (medium: the hat and the top of her head show, her eyes stay hidden,
+   * the rest of her stays behind the object). t = { x, y, a, s? }: the point on the edge of
    * the object where she peeks out, the direction she leans out (radians)
    * and her size (smaller behind small things).
    * She is drawn BEFORE the object, so the object hides her body; the part
@@ -1174,14 +1174,14 @@
    */
   function drawBubuPeek(c, t) {
     const S = t.s || 120;
-    const out = 2 + Math.sin(E.time * 4) * 7;          // slides a little out and in
+    const out = 1 + Math.sin(E.time * 4) * 4;          // slides a little out and in
     c.save();
     c.translate(t.x, t.y);
     c.rotate(t.a + Math.PI / 2);                        // from here on, "up" is out of the hiding place
     c.beginPath(); c.rect(-S * 1.5, -S * 2, S * 3, S * 2 + 6); c.clip();
     c.translate(0, -out);
     c.rotate(Math.sin(E.time * 3) * 0.12);
-    drawBubu(c, 0, -S * 0.12, S, false);
+    drawBubu(c, 0, S * 0.16, S, false);           // only the hat and the top of her head stick out
     c.restore();
   }
 
