@@ -1280,6 +1280,7 @@
         if (scene.extra) scene.extra(c);
         // Bubu peeks out (hat and head) from the moment the lights come on
         const bubuPeek = (state === 'seek' || (state === 'dark' && this.pendingScene === undefined)) && !peeks.has(hideIn);
+        let bubuOut = null;          // Bubu once she is out: drawn in front of everything
         for (const p of places) {
           const dx = p.shake > 0 ? Math.sin(p.shake * 45) * 8 : 0;
           drawShadow(c, p, scene.shadow);
@@ -1290,13 +1291,24 @@
             const k = pk.who === 'bubu' ? E.easeOutBack(Math.min(1, pk.t / 0.45))
               : Math.min(E.easeOutBack(Math.min(1, pk.t / 0.35)), (1.6 - pk.t) / 0.3);
             const x = E.lerp(p.from.x, p.to.x, Math.max(0, k)), y = E.lerp(p.from.y, p.to.y, Math.max(0, k));
-            if (pk.who === 'bubu') drawBubu(c, x, y + (state === 'found' ? Math.abs(Math.sin(E.time * 7)) * -12 : 0), 125, true);
-            else Art.emoji(c, pk.who, x, y, 96);
+            if (pk.who === 'bubu') {
+              const b = { x, y: y + (state === 'found' ? Math.abs(Math.sin(E.time * 7)) * -12 : 0), clip: p.clip };
+              // she jumps out from behind the object; from the top of her jump
+              // she stays in front of it (else its edge would cover her)
+              if (pk.t > 0.27) bubuOut = b;
+              else drawBubu(c, b.x, b.y, 125, true);
+            } else Art.emoji(c, pk.who, x, y, 96);
           } else if (bubuPeek && p === hideIn) {
             drawBubuPeek(c, p.tip);
           }
           if (p.clip) c.restore();
           drawPlace(c, p, dx);
+        }
+        if (bubuOut) {
+          const b = bubuOut;
+          if (b.clip) { c.save(); c.beginPath(); c.rect(b.clip.x, b.clip.y, b.clip.w, b.clip.h); c.clip(); }
+          drawBubu(c, b.x, b.y, 125, true);
+          if (b.clip) c.restore();
         }
         if (state === 'end') {
           // everybody comes out to party with Bubu
