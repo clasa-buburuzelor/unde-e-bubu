@@ -2,12 +2,12 @@
 
 Joc de Crăciun pentru clasa pregătitoare (6–7 ani), pentru exersat **clicul**. Copilul nu trebuie să citească nimic.
 
-Bubu se joacă de-a v-ați ascunselea în opt locuri, pe rând unul în casă și unul afară: **casa cu bradul** 🏠, **pădurea înzăpezită** 🌲, **bucătăria** 🍪, **piața satului** 🏘️, **atelierul lui Moș Crăciun** 🎁, **lacul înghețat** ⛸️, **grajdul renilor** 🦌 și **Polul Nord** 🐧. Ninge doar în locurile de afară. În fiecare loc se ascunde de 3 ori, de fiecare dată după alt lucru: brad, ciorap, perdea, omul de zăpadă, căsuța din pădure, frigider, oală, cufăr, sac, butoi, baloți de fân, iglu, cutia poștală a lui Moș Crăciun… Copilul face clic pe lucruri:
+Bubu se joacă de-a v-ați ascunselea în zece locuri, pe rând unul în casă și unul afară: **casa cu bradul** 🏠, **pădurea înzăpezită** 🌲, **bucătăria** 🍪, **piața satului** 🏘️, **atelierul lui Moș Crăciun** 🎁, **lacul înghețat** ⛸️, **grajdul renilor** 🦌, **țara dulciurilor** 🍭, **clasa** 🏫 și **Polul Nord** 🐧. Ninge doar în locurile de afară. În fiecare loc se ascunde de 3 ori, de fiecare dată după alt lucru: brad, ciorap, perdea, omul de zăpadă, căsuța din pădure, frigider, oală, cufăr, sac, butoi, baloți de fân, iglu, cutia poștală a lui Moș Crăciun, acadea, căsuța din turtă dulce, tort, catedră, ghiozdan… Copilul face clic pe lucruri:
 
 - dacă acolo nu e Bubu, iese pentru o clipă un alt prieten (o pisicuță, o vulpiță, un ursuleț…);
 - dacă acolo e Bubu, ea iese, iar o steluță zboară sus.
 
-Apoi se stinge lumina 🙈 și Bubu se ascunde în alt loc. După 3 steluțe se trece în locul următor. Sunt 24 de runde în total și jocul durează cam 7–8 minute. La final, toți prietenii ies să petreacă împreună cu Bubu și apare „Crăciun fericit!”. Butonul 🔁 pornește jocul din nou.
+Apoi se stinge lumina 🙈 și Bubu se ascunde în alt loc. După 3 steluțe se trece în locul următor. Sunt 30 de runde în total și jocul durează cam 9–10 minute. La final, toți prietenii ies să petreacă împreună cu Bubu și apare „Crăciun fericit!”. Butonul 🔁 pornește jocul din nou.
 
 Din clipa în care se aprinde lumina, Bubu trage cu ochiul de după ascunzătoare: i se văd căciulița roșie și creștetul capului (ochii nu), iar restul ei rămâne ascuns. Ea se leagănă puțin. Așa jocul are o dificultate medie. Jocul nu are mânuță care să arate unde trebuie dat clic, nu are sunet, nu are cronometru și nu se poate greși.
 
@@ -22,7 +22,7 @@ HTML + CSS + JavaScript, fără biblioteci și fără sunet. Desenele se fac pe 
 ```
 js/engine.js   canvas, buclă, clicuri, ninsoare, scântei, mânuța
 js/art.js      desene: Bubu, bradul, cadourile, omul de zăpadă…
-js/game.js     jocul (cele opt locuri și ascunzătorile lor)
+js/game.js     jocul (cele zece locuri și ascunzătorile lor)
 js/main.js     ecranul de start, povestea, butoanele
 ```
 

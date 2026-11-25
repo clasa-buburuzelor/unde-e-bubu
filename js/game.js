@@ -1,13 +1,14 @@
 /*
  * game.js — Unde e Bubu?
  *
- * Hide and seek at Christmas, in eight places, inside and outside in turn:
+ * Hide and seek at Christmas, in ten places, inside and outside in turn:
  * the room with the tree, the snowy forest, the kitchen, the village square,
- * Santa's workshop, the frozen lake, the reindeer stable and the North Pole.
+ * Santa's workshop, the frozen lake, the reindeer stable, the land of sweets,
+ * the classroom and the North Pole.
  * It snows only in the outdoor places. In each place Bubu hides 3 times behind
  * one of the things there; the child clicks on things: a little friend peeks
  * out of the empty places, Bubu giggles and jumps out when found.
- * 8 places x 3 rounds = 24 rounds (about 7-8 minutes).
+ * 10 places x 3 rounds = 30 rounds (about 9-10 minutes).
  *
  * Made for 6-year-olds after one computer lesson: only clicks, big targets,
  * no mistakes, nothing to read, no voice, no pointing hand. As soon as the
@@ -625,6 +626,302 @@
   }
 
 
+  // ================================================================ the land of sweets
+  /** A candy cane standing on the ground at (x, y), h tall, hook to the right. */
+  function candyCane(c, x, y, h, w) {
+    const r = w * 1.4;
+    const path = () => { c.beginPath(); c.moveTo(x, y); c.lineTo(x, y - h + r); c.arc(x + r, y - h + r, r, Math.PI, 0); };
+    c.save();
+    c.lineCap = 'round'; c.lineWidth = w;
+    c.strokeStyle = '#fff'; path(); c.stroke();
+    c.strokeStyle = '#e53935'; c.setLineDash([w * 0.8, w * 0.8]); path(); c.stroke();
+    c.restore();
+  }
+
+  function drawCandy(o) {
+    Art.sky(o, '#1b1446', '#6a4a9c');
+    Art.moon(o, 1250, 140, 40);
+    Art.hills(o, 480, '#d9c2ec', 30, 1.5);
+    Art.hills(o, 520, '#ead9f5', 18, 3.2);
+    o.fillStyle = '#fbeff7'; o.fillRect(0, 560, 1600, 340);
+    // a fence of candy canes at the back
+    for (let x = 20; x < 1600; x += 110) candyCane(o, x, 575, 105, 13);
+    Art.hills(o, 575, '#fff6fb', 10, 5);
+    // little lollipops far away
+    for (const [x, col] of [[180, '#ffd54f'], [760, '#80deea'], [1520, '#a5d6a7']]) {
+      o.fillStyle = '#fff'; o.fillRect(x - 4, 470, 8, 100);
+      o.fillStyle = col; o.beginPath(); o.arc(x, 465, 30, 0, 6.3); o.fill();
+    }
+  }
+
+  function candyPlaces() {
+    const gum = (c, x, y, rx, h, col) => {
+      c.fillStyle = col;
+      c.beginPath(); c.ellipse(x, y, rx, h, 0, Math.PI, 0); c.closePath(); c.fill();
+      c.fillStyle = 'rgba(255,255,255,0.75)';
+      for (let k = 0; k < 9; k++) {
+        c.beginPath();
+        c.arc(x + (((k * 37) % 100) / 100 - 0.5) * rx * 1.2, y - h * 0.15 - ((k * 53) % 100) / 100 * h * 0.65, 3.5, 0, 6.3);
+        c.fill();
+      }
+    };
+    return [
+      {
+        id: 'lollipop', hit: { x: 385, y: 290, w: 190, h: 325 },
+        from: { x: 480, y: 390 }, to: { x: 480, y: 232 }, tip: { x: 480, y: 296, a: -1.57, s: 110 },
+        draw(c) {
+          c.fillStyle = '#fff'; c.fillRect(472, 450, 16, 160);
+          c.fillStyle = '#ff80ab'; c.beginPath(); c.arc(480, 385, 92, 0, 6.3); c.fill();
+          c.strokeStyle = '#fff'; c.lineWidth = 11;
+          c.beginPath();
+          for (let t = 0; t < 4 * Math.PI; t += 0.1) { const r = 6 + t * 6.4; c.lineTo(480 + Math.cos(t) * r, 385 + Math.sin(t) * r); }
+          c.stroke();
+          c.fillStyle = '#43a047';
+          c.beginPath(); c.moveTo(480, 495); c.lineTo(450, 478); c.lineTo(450, 512); c.closePath(); c.fill();
+          c.beginPath(); c.moveTo(480, 495); c.lineTo(510, 478); c.lineTo(510, 512); c.closePath(); c.fill();
+        }
+      },
+      {
+        id: 'ginger', hit: { x: 1160, y: 370, w: 290, h: 275 },
+        from: { x: 1300, y: 560 }, to: { x: 1495, y: 560 }, tip: { x: 1420, y: 570, a: 0 },
+        draw(c) {
+          c.fillStyle = '#b5651d'; c.fillRect(1180, 470, 240, 170);
+          c.fillStyle = '#fff';
+          c.beginPath(); c.moveTo(1160, 485); c.lineTo(1300, 375); c.lineTo(1440, 485); c.closePath(); c.fill();
+          for (let x = 1172; x < 1430; x += 22) { c.beginPath(); c.arc(x, 486, 11, 0, Math.PI); c.fill(); }
+          const dots = ['#e53935', '#43a047', '#fbc02d', '#1e88e5'];
+          for (let i = 0; i < 9; i++) { c.fillStyle = dots[i % 4]; c.beginPath(); c.arc(1215 + i * 21, 470 - (i < 5 ? i : 8 - i) * 17, 7, 0, 6.3); c.fill(); }
+          c.fillStyle = '#ffe082'; c.fillRect(1205, 515, 50, 45); c.fillRect(1345, 515, 50, 45);
+          c.strokeStyle = '#fff'; c.lineWidth = 5; c.strokeRect(1205, 515, 50, 45); c.strokeRect(1345, 515, 50, 45);
+          c.fillStyle = '#6d3410'; Art.roundRect(c, 1272, 560, 56, 80, 22); c.fill();
+          candyCane(c, 1257, 640, 70, 9);
+          candyCane(c, 1338, 640, 70, 9);
+        }
+      },
+      {
+        id: 'gingerman', hit: { x: 870, y: 590, w: 220, h: 270 },
+        from: { x: 980, y: 720 }, to: { x: 1105, y: 640 }, tip: { x: 980, y: 597, a: -1.57, s: 90 },
+        draw(c) {
+          const col = '#c27a3a';
+          c.strokeStyle = col; c.lineCap = 'round';
+          c.lineWidth = 34;
+          c.beginPath(); c.moveTo(945, 708); c.lineTo(897, 748); c.moveTo(1015, 708); c.lineTo(1063, 748); c.stroke();
+          c.lineWidth = 38;
+          c.beginPath(); c.moveTo(955, 790); c.lineTo(945, 836); c.moveTo(1005, 790); c.lineTo(1015, 836); c.stroke();
+          c.lineCap = 'butt';
+          c.fillStyle = col;
+          Art.roundRect(c, 930, 678, 100, 122, 34); c.fill();
+          c.beginPath(); c.arc(980, 640, 46, 0, 6.3); c.fill();
+          // icing
+          c.strokeStyle = '#fff'; c.lineWidth = 4;
+          c.beginPath();
+          for (const [x, y] of [[900, 735], [1052, 735], [935, 822], [1006, 822]]) { c.moveTo(x, y); c.lineTo(x + 5, y + 8); c.lineTo(x + 10, y); c.lineTo(x + 15, y + 8); }
+          c.stroke();
+          c.beginPath(); c.arc(980, 648, 18, 0.3, Math.PI - 0.3); c.stroke();
+          c.fillStyle = '#3e2723'; c.beginPath(); c.arc(964, 630, 5, 0, 6.3); c.arc(996, 630, 5, 0, 6.3); c.fill();
+          c.fillStyle = '#e53935';
+          for (const y of [705, 737, 769]) { c.beginPath(); c.arc(980, y, 8, 0, 6.3); c.fill(); }
+        }
+      },
+      {
+        id: 'gumdrops', hit: { x: 95, y: 650, w: 355, h: 210 },
+        from: { x: 270, y: 760 }, to: { x: 270, y: 598 }, tip: { x: 270, y: 657, a: -1.57 },
+        draw(c) {
+          gum(c, 270, 852, 110, 195, '#43a047');
+          gum(c, 160, 856, 65, 110, '#e53935');
+          gum(c, 385, 856, 62, 100, '#fbc02d');
+        }
+      },
+      {
+        id: 'cake', hit: { x: 560, y: 640, w: 260, h: 215 },
+        from: { x: 690, y: 760 }, to: { x: 690, y: 605 }, tip: { x: 690, y: 667, a: -1.57, s: 110 },
+        draw(c) {
+          c.fillStyle = '#eceff1'; c.beginPath(); c.ellipse(690, 845, 135, 14, 0, 0, 6.3); c.fill();
+          c.fillStyle = '#f8bbd0'; c.fillRect(575, 745, 230, 98);
+          c.fillStyle = '#fff'; c.fillRect(615, 665, 150, 82);
+          c.fillStyle = '#e53935';
+          for (let x = 585; x < 800; x += 20) { c.beginPath(); c.arc(x, 745, 10, 0, Math.PI); c.fill(); }
+          for (let x = 625; x < 765; x += 20) { c.beginPath(); c.arc(x, 665, 10, 0, Math.PI); c.fill(); }
+          c.fillStyle = '#ffd54f';
+          for (let x = 600; x < 800; x += 40) Art.star(c, x, 800, 9, 4);
+        }
+      },
+      {
+        id: 'cupcake', hit: { x: 1315, y: 655, w: 190, h: 210 },
+        from: { x: 1410, y: 770 }, to: { x: 1410, y: 600 }, tip: { x: 1410, y: 662, a: -1.57, s: 90 },
+        draw(c) {
+          c.fillStyle = '#ec407a';
+          c.beginPath(); c.moveTo(1330, 765); c.lineTo(1490, 765); c.lineTo(1468, 860); c.lineTo(1352, 860); c.closePath(); c.fill();
+          c.strokeStyle = '#c2185b'; c.lineWidth = 4;
+          for (let i = 1; i < 7; i++) { const t = i / 7; c.beginPath(); c.moveTo(1330 + t * 160, 765); c.lineTo(1352 + t * 116, 860); c.stroke(); }
+          c.fillStyle = '#fce4ec';
+          for (const [x, y, r] of [[1365, 755, 42], [1455, 755, 42], [1410, 745, 48], [1410, 706, 46]]) { c.beginPath(); c.arc(x, y, r, 0, 6.3); c.fill(); }
+          const sp = ['#e53935', '#43a047', '#1e88e5', '#fbc02d'];
+          for (let i = 0; i < 14; i++) { c.fillStyle = sp[i % 4]; c.fillRect(1362 + (i * 47) % 90, 718 + (i * 29) % 55, 9, 4); }
+        }
+      }
+    ];
+  }
+
+  // ================================================================ the classroom
+  function drawClass(o) {
+    o.fillStyle = '#d8ead9'; o.fillRect(0, 0, 1600, 650);
+    o.fillStyle = '#b9d6be'; o.fillRect(0, 470, 1600, 180);
+    o.fillStyle = '#8fb59a'; o.fillRect(0, 462, 1600, 10);
+    // blackboard with chalk drawings
+    o.fillStyle = '#8d5a33'; o.fillRect(410, 120, 600, 270);
+    o.fillStyle = '#2f5d46'; o.fillRect(425, 135, 570, 240);
+    o.strokeStyle = 'rgba(255,255,255,0.85)'; o.lineWidth = 4; o.lineCap = 'round';
+    o.beginPath();
+    for (let i = 0; i < 6; i++) {
+      const a = i * Math.PI / 3, ex = 530 + Math.cos(a) * 55, ey = 255 + Math.sin(a) * 55;
+      o.moveTo(530, 255); o.lineTo(ex, ey);
+      const mx = 530 + Math.cos(a) * 34, my = 255 + Math.sin(a) * 34;
+      o.moveTo(mx, my); o.lineTo(mx + Math.cos(a + 0.8) * 14, my + Math.sin(a + 0.8) * 14);
+      o.moveTo(mx, my); o.lineTo(mx + Math.cos(a - 0.8) * 14, my + Math.sin(a - 0.8) * 14);
+    }
+    // a star and a little tree
+    for (let i = 0; i <= 5; i++) { const a = -Math.PI / 2 + i * 4 * Math.PI / 5; o[i ? 'lineTo' : 'moveTo'](710 + Math.cos(a) * 55, 250 + Math.sin(a) * 55); }
+    o.moveTo(880, 180); o.lineTo(830, 300); o.lineTo(930, 300); o.closePath();
+    o.moveTo(880, 300); o.lineTo(880, 330);
+    o.stroke();
+    o.lineCap = 'butt';
+    o.fillStyle = '#a1887f'; o.fillRect(440, 375, 540, 10);
+    o.fillStyle = '#fff'; o.fillRect(860, 368, 30, 7);
+    // window with snow
+    o.fillStyle = '#16305e'; o.fillRect(1180, 120, 260, 240);
+    o.fillStyle = '#fff'; for (let i = 0; i < 20; i++) { o.beginPath(); o.arc(1190 + (i * 59) % 240, 130 + (i * 41) % 200, 3, 0, 6.3); o.fill(); }
+    o.fillStyle = '#eef4ff'; o.fillRect(1180, 330, 260, 30);
+    o.strokeStyle = '#fff'; o.lineWidth = 12; o.strokeRect(1180, 120, 260, 240);
+    o.beginPath(); o.moveTo(1310, 120); o.lineTo(1310, 360); o.stroke();
+    // clock
+    o.fillStyle = '#fff'; o.beginPath(); o.arc(200, 120, 40, 0, 6.3); o.fill();
+    o.strokeStyle = '#5d4037'; o.lineWidth = 6; o.stroke();
+    o.lineWidth = 4; o.beginPath(); o.moveTo(200, 120); o.lineTo(200, 92); o.moveTo(200, 120); o.lineTo(220, 128); o.stroke();
+    // floor
+    o.fillStyle = '#c9a274'; o.fillRect(0, 650, 1600, 250);
+    o.fillStyle = 'rgba(0,0,0,0.1)'; for (let y = 690; y < 900; y += 45) o.fillRect(0, y, 1600, 3);
+  }
+
+  function classPlaces() {
+    return [
+      {
+        id: 'shelf', hit: { x: 80, y: 205, w: 240, h: 440 },
+        from: { x: 200, y: 420 }, to: { x: 385, y: 400 }, tip: { x: 310, y: 400, a: 0 },
+        draw(c) {
+          c.fillStyle = '#8d5a33'; c.fillRect(90, 220, 220, 420);
+          c.fillStyle = '#6d4022'; c.fillRect(105, 235, 190, 390);
+          c.fillStyle = '#8d5a33'; c.fillRect(80, 212, 240, 16);
+          const cols = ['#e53935', '#1e88e5', '#fbc02d', '#43a047', '#8e44ad', '#fb8c00'];
+          for (let r = 0; r < 4; r++) {
+            const y = 330 + r * 100;
+            c.fillStyle = '#8d5a33'; c.fillRect(105, y, 190, 12);
+            for (let x = 112, k = r; x < 280; k++) {
+              const w = 18 + (k * 7) % 14, h = 60 + (k * 13) % 30;
+              c.fillStyle = cols[k % cols.length]; c.fillRect(x, y - h, w, h);
+              x += w + 4;
+            }
+          }
+        }
+      },
+      {
+        id: 'desk', hit: { x: 550, y: 470, w: 360, h: 245 },
+        from: { x: 730, y: 620 }, to: { x: 730, y: 455 }, tip: { x: 740, y: 520, a: -1.57 },
+        draw(c) {
+          c.fillStyle = '#e53935'; c.beginPath(); c.arc(610, 503, 16, 0, 6.3); c.fill();
+          c.fillStyle = '#5d4037'; c.fillRect(608, 482, 4, 10);
+          c.fillStyle = '#43a047'; c.beginPath(); c.ellipse(619, 486, 8, 4, -0.4, 0, 6.3); c.fill();
+          c.fillStyle = '#1e88e5'; c.fillRect(820, 492, 72, 14);
+          c.fillStyle = '#fbc02d'; c.fillRect(826, 478, 60, 14);
+          c.fillStyle = '#8d5a33'; c.fillRect(550, 518, 360, 24);
+          c.fillStyle = '#a1693d'; c.fillRect(565, 542, 330, 170);
+          c.fillStyle = '#8d5a33'; c.fillRect(580, 560, 120, 60); c.fillRect(580, 632, 120, 60);
+          c.fillStyle = '#ffd54f'; c.beginPath(); c.arc(640, 590, 7, 0, 6.3); c.arc(640, 662, 7, 0, 6.3); c.fill();
+        }
+      },
+      {
+        id: 'globe', hit: { x: 970, y: 470, w: 190, h: 380 },
+        from: { x: 1065, y: 720 }, to: { x: 1215, y: 690 }, tip: { x: 1145, y: 720, a: 0, s: 100 },
+        draw(c) {
+          c.fillStyle = '#a1693d'; c.fillRect(985, 610, 160, 235);
+          c.strokeStyle = '#7a4a28'; c.lineWidth = 4; c.strokeRect(997, 625, 136, 205);
+          c.beginPath(); c.moveTo(1065, 625); c.lineTo(1065, 830); c.stroke();
+          c.fillStyle = '#ffd54f'; c.beginPath(); c.arc(1052, 730, 6, 0, 6.3); c.arc(1078, 730, 6, 0, 6.3); c.fill();
+          c.fillStyle = '#8d5a33'; c.fillRect(975, 600, 180, 16);
+          c.fillStyle = '#5d4037'; c.fillRect(1040, 588, 50, 12); c.fillRect(1061, 570, 8, 20);
+          c.fillStyle = '#4fc3f7'; c.beginPath(); c.arc(1065, 528, 58, 0, 6.3); c.fill();
+          c.fillStyle = '#66bb6a';
+          c.beginPath(); c.ellipse(1045, 510, 22, 16, 0.5, 0, 6.3); c.ellipse(1085, 545, 18, 24, -0.3, 0, 6.3); c.fill();
+          c.strokeStyle = '#ffc107'; c.lineWidth = 5; c.beginPath(); c.arc(1065, 528, 68, -1.9, 1.9); c.stroke();
+        }
+      },
+      {
+        id: 'bench', hit: { x: 370, y: 670, w: 320, h: 185 },
+        from: { x: 530, y: 780 }, to: { x: 530, y: 640 }, tip: { x: 530, y: 702, a: -1.57 },
+        draw(c) {
+          c.fillStyle = '#fff'; c.fillRect(430, 690, 62, 10);
+          c.fillStyle = '#e53935'; c.fillRect(600, 693, 50, 6);
+          c.fillStyle = '#c8925a'; c.fillRect(380, 700, 300, 22);
+          c.fillStyle = '#9c6b3e'; c.fillRect(392, 722, 276, 80);
+          c.fillStyle = '#78909c'; c.fillRect(400, 800, 14, 50); c.fillRect(646, 800, 14, 50);
+        }
+      },
+      {
+        id: 'backpack', hit: { x: 1265, y: 660, w: 180, h: 200 },
+        from: { x: 1355, y: 780 }, to: { x: 1355, y: 625 }, tip: { x: 1355, y: 692, a: -1.57, s: 110 },
+        draw(c) {
+          c.strokeStyle = '#8e1b1b'; c.lineWidth = 8; c.beginPath(); c.arc(1355, 692, 24, Math.PI, 0); c.stroke();
+          c.fillStyle = '#e53935'; Art.roundRect(c, 1270, 690, 170, 165, 40); c.fill();
+          c.fillStyle = '#c62828'; Art.roundRect(c, 1270, 690, 170, 72, 36); c.fill();
+          c.fillStyle = '#ef5350'; Art.roundRect(c, 1305, 775, 100, 60, 16); c.fill();
+          c.fillStyle = '#ffd54f'; c.fillRect(1345, 748, 20, 20);
+        }
+      },
+      {
+        id: 'toybox', hit: { x: 1450, y: 630, w: 150, h: 225 },
+        from: { x: 1525, y: 740 }, to: { x: 1525, y: 580 }, tip: { x: 1525, y: 648, a: -1.57, s: 100 },
+        draw(c) {
+          c.fillStyle = '#1e88e5'; c.fillRect(1460, 660, 130, 190);
+          c.fillStyle = '#1565c0'; c.fillRect(1452, 645, 146, 22);
+          c.fillStyle = '#ffd54f';
+          for (const [x, y] of [[1495, 720], [1555, 760], [1500, 805]]) Art.star(c, x, y, 18, 8);
+        }
+      }
+    ];
+  }
+
+  function decorCandy(o) {
+    glow(o, 1250, 140, 220, 'rgba(255,250,220,0.15)');
+    glow(o, 800, 600, 600, 'rgba(255,170,220,0.12)');
+    sparkles(o, 580, 900, 70);
+    const sg = o.createLinearGradient(0, 560, 0, 900);
+    sg.addColorStop(0, 'rgba(150,90,170,0.16)'); sg.addColorStop(1, 'rgba(255,255,255,0)');
+    o.fillStyle = sg; o.fillRect(0, 560, 1600, 340);
+    grain(o, 0.03);
+    vignette(o);
+  }
+
+  function decorClass(o) {
+    // paper snowflakes on strings
+    o.strokeStyle = 'rgba(80,80,80,0.5)'; o.lineWidth = 2;
+    o.fillStyle = '#fff';
+    for (const [x, len] of [[1080, 70], [1110, 120], [1500, 90], [1550, 140], [60, 80]]) {
+      o.beginPath(); o.moveTo(x, 0); o.lineTo(x, len); o.stroke();
+      Art.star(o, x, len + 16, 18, 7, 6);
+    }
+    // garland above the blackboard
+    o.strokeStyle = '#2e7d32'; o.lineWidth = 12;
+    o.beginPath(); o.moveTo(400, 115); o.quadraticCurveTo(710, 175, 1020, 115); o.stroke();
+    o.fillStyle = '#e53935';
+    for (let i = 1; i < 8; i++) { const t = i / 8; o.beginPath(); o.arc(400 + t * 620, 115 + 4 * t * (1 - t) * 30, 8, 0, 6.3); o.fill(); }
+    glow(o, 1310, 240, 260, 'rgba(180,210,255,0.15)');
+    glow(o, 800, 420, 560, 'rgba(255,230,160,0.14)');
+    woodGrain(o, 0, 650, 1600, 250, false);
+    roomLight(o, 650);
+    grain(o, 0.03);
+    vignette(o);
+  }
+
   // ================================================================ storybook look
   // Soft lights, a vignette and little details on every background, a dark
   // "drawn" outline around every hiding place and a soft shadow under it.
@@ -1121,7 +1418,7 @@
     if (p.anim) { c.save(); c.translate(dx || 0, 0); p.anim(c); c.restore(); }
   }
 
-  // ================================================================ the eight places
+  // ================================================================ the ten places
   // indoor and outdoor places alternate; it snows only outside
   const SCENES = [
     { key: 'room', icon: '🏠', bg: o => { drawRoom(o); decorRoom(o); }, extra: drawFire, places: roomPlaces,
@@ -1138,22 +1435,31 @@
       friends: ['🦆', '🐟', '🐰', '🦊', '🦉', '🐦'] },
     { key: 'stable', icon: '🦌', bg: o => { drawStable(o); decorStable(o); }, places: stablePlaces,
       friends: ['🐴', '🐑', '🐮', '🐔', '🐱', '🐭', '🦌'] },
+    { key: 'candy', icon: '🍭', outdoor: true, shadow: 'rgba(120,80,150,0.3)', bg: o => { drawCandy(o); decorCandy(o); }, places: candyPlaces,
+      friends: ['🐰', '🐻', '🦊', '🐿️', '🐧', '🦉'] },
+    { key: 'class', icon: '🏫', bg: o => { drawClass(o); decorClass(o); }, places: classPlaces,
+      friends: ['🐱', '🐭', '🐶', '🐹', '🐰', '🧸'] },
     { key: 'north', icon: '🐧', outdoor: true, shadow: 'rgba(60,90,150,0.35)', bg: o => { drawNorthPole(o); decorNorth(o); }, places: northPlaces,
       friends: ['🐧', '🐰', '🦊', '🦉', '🐳', '🐟', '🐦', '🐻'] }
   ];
   const ALL_FRIENDS = ['🐱', '🦊', '🐰', '🦉', '🐿️', '🧸', '🐧', '🦌', '🐶', '🐭'];
 
   /** Progress at the top: the places, then the stars for this place. */
-  const STAR_X = i => 930 + i * 68;
+  // the box at the top holds one icon per place and then the stars
+  const ICON_GAP = 54, STAR_GAP = 66, BAR_PAD = 26;
+  const BAR_W = BAR_PAD * 2 + SCENES.length * ICON_GAP + 20 + PER_SCENE * STAR_GAP;
+  const BAR_X = 800 - BAR_W / 2;
+  const ICON_X = i => BAR_X + BAR_PAD + ICON_GAP / 2 + i * ICON_GAP;
+  const STAR_X = i => BAR_X + BAR_PAD + SCENES.length * ICON_GAP + 20 + STAR_GAP / 2 + i * STAR_GAP;
   function drawProgress(c, sceneIdx, found) {
     c.fillStyle = 'rgba(30,10,10,0.45)';
-    Art.roundRect(c, 380, 12, 740, 76, 38); c.fill();
+    Art.roundRect(c, BAR_X, 12, BAR_W, 76, 38); c.fill();
     SCENES.forEach((s, i) => {
-      const x = 425 + i * 60;
+      const x = ICON_X(i);
       c.globalAlpha = i <= sceneIdx ? 1 : 0.35;
       c.fillStyle = i < sceneIdx ? '#ffd54f' : i === sceneIdx ? '#ffffff' : 'rgba(255,255,255,0.5)';
-      c.beginPath(); c.arc(x, 50, 25, 0, Math.PI * 2); c.fill();
-      Art.emoji(c, s.icon, x, 52, 30);
+      c.beginPath(); c.arc(x, 50, 23, 0, Math.PI * 2); c.fill();
+      Art.emoji(c, s.icon, x, 52, 27);
       c.globalAlpha = 1;
     });
     for (let i = 0; i < PER_SCENE; i++) {

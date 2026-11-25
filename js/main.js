@@ -19,7 +19,7 @@
     },
     {
       art: '<span class="a float" style="top:12%;left:12%">🐱</span><span class="a float" style="top:14%;right:14%;animation-delay:-1s">🐭</span><span class="a float" style="bottom:14%;left:16%;animation-delay:-2s">🐰</span><span class="a float" style="bottom:12%;right:12%;animation-delay:-.5s">🦉</span>',
-      text: 'Bubu se ascunde în multe locuri: în <b>casa cu bradul</b>, în <b>pădure</b>, în <b>bucătărie</b>, în <b>piața satului</b>, în <b>atelierul lui Moș Crăciun</b>, pe <b>lacul înghețat</b>, la <b>grajdul renilor</b> și chiar la <b>Polul Nord</b>! Dar atenție: s-au ascuns și <b>alți prieteni</b>!'
+      text: 'Bubu se ascunde în multe locuri: în <b>casa cu bradul</b>, în <b>pădure</b>, în <b>bucătărie</b>, în <b>piața satului</b>, în <b>atelierul lui Moș Crăciun</b>, pe <b>lacul înghețat</b>, la <b>grajdul renilor</b>, în <b>țara dulciurilor</b>, în <b>clasă</b> și chiar la <b>Polul Nord</b>! Dar atenție: s-au ascuns și <b>alți prieteni</b>!'
     },
     {
       art: '<span class="a" style="top:16%;left:14%">🖱️</span><span class="a float" style="bottom:16%;right:14%">⭐</span><span class="a wiggle" style="top:40%;left:44%">👀</span>',
