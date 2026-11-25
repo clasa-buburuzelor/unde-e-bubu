@@ -14,7 +14,7 @@ Din clipa în care se aprinde lumina, Bubu trage cu ochiul de după ascunzătoar
 Jocul are **3 niveluri**, ca acei copii care termină repede să nu se plictisească. Nivelul se vede în cercul colorat din stânga sus (1, 2, 3):
 
 1. Lui Bubu i se văd căciulița roșie și creștetul capului (ochii nu).
-2. Bubu se ascunde mai bine: i se vede aproape doar căciulița.
+2. Bubu se ascunde și mai bine: i se vede doar vârful căciuliței.
 3. La fel de ascunsă ca la nivelul 2, dar la fiecare câteva secunde se pitește și fuge în altă ascunzătoare.
 
 La finalul unui nivel apare jos un buton mare, verde, cu Bubu, o săgeată ▶ și steluțele nivelului următor (⭐⭐ sau ⭐⭐⭐). Butonul pornește nivelul următor. După nivelul 3, butonul are 🔁 și jocul o ia de la capăt, cu nivelul 1. Butonul ▶ de pe ecranul de start pornește tot nivelul 1.

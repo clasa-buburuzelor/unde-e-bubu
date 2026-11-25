@@ -16,7 +16,7 @@
  * top of her head show (always, from the first moment: a delayed clue
  * confused the children).
  * Three levels, for the children who finish quickly: on level 2 she hides
- * deeper (almost only the hat shows), on level 3 she also runs to another
+ * deeper (only the tip of the hat shows), on level 3 she also runs to another
  * hiding place every few seconds.
  */
 (function () {
@@ -71,7 +71,7 @@
       },
       {
         id: 'tree', hit: { x: 90, y: 280, w: 320, h: 570 },
-        from: { x: 230, y: 650 }, to: { x: 95, y: 560 }, tip: { x: 342, y: 565, a: 0, s: 100 },
+        from: { x: 230, y: 650 }, to: { x: 95, y: 560 }, tip: { x: 352, y: 565, a: 0, s: 100 },
         draw(c) {
           Art.bigTree(c, 250, 850, 560);
           const balls = [[200, 440, '#e53935'], [300, 520, '#1e88e5'], [180, 620, '#fbc02d'], [330, 680, '#8e44ad'], [250, 360, '#43a047'], [140, 740, '#ec407a'], [280, 760, '#fb8c00']];
@@ -254,7 +254,7 @@
       },
       {
         id: 'pine', hit: { x: 70, y: 300, w: 320, h: 570 },
-        from: { x: 230, y: 650 }, to: { x: 85, y: 560 }, tip: { x: 338, y: 775, a: 0, s: 100 },
+        from: { x: 230, y: 650 }, to: { x: 85, y: 560 }, tip: { x: 348, y: 775, a: 0, s: 100 },
         draw(c) { Art.pine(c, 230, 880, 560, '#1b5e3a'); }
       },
       {
@@ -1490,7 +1490,7 @@
    * of her that is behind the edge is also cut off, so it never shows next
    * to a thin object.
    * depth: how far below the edge her middle is (0.16 = hat and the top of
-   * her head, 0.26 = almost only the hat). sink: 0..1, she ducks down out of
+   * her head, 0.36 = only the tip of the hat). sink: 0..1, she ducks down out of
    * sight (on level 3 she ducks before she runs to another hiding place).
    */
   function drawBubuPeek(c, t, depth, sink) {
@@ -1523,7 +1523,7 @@
   // ------------------------------------------------------------ the game
   /**
    * level 1: the hat and the top of Bubu's head stick out.
-   * level 2: she hides deeper (almost only the hat shows).
+   * level 2: she hides deeper (only the tip of the hat shows).
    * level 3: like level 2, and every few seconds she ducks and runs to
    * another hiding place.
    */
@@ -1531,7 +1531,7 @@
   Game.SCENES = SCENES.length;
   Game.play = function (onEnd, level, firstScene) {
     level = level || 1;
-    const depth = level === 1 ? 0.16 : 0.26;
+    const depth = level === 1 ? 0.16 : 0.36;
     let moveT = 0, nextMove = 4, sink = 0, moving = -1;   // level 3: Bubu changes her hiding place
     let sceneIdx = 0, scene = null, places = null, order = null;
     let round = 0, found = 0;        // within the current place
