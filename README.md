@@ -25,6 +25,16 @@ Jocul nu are mânuță care să arate unde trebuie dat clic, nu are sunet, nu ar
 
 Butonul **📖** din colțul din stânga jos deschide **povestea** (4 pagini cu text mare), pe care o poți citi la tablă. Paginile se schimbă cu săgețile de pe ecran sau de la tastatură. Butonul verde de pe ultima pagină pornește jocul.
 
+## Pentru testare
+
+Nivelul și planșa de început se pot alege din adresă, cu `nivel` (1–3) și `plansa` (1–10), de exemplu:
+
+```
+index.html?nivel=3&plansa=9
+```
+
+Butonul ▶ pornește atunci direct nivelul 3, de la planșa 9 (clasa). Fără acești parametri, jocul începe ca de obicei, cu nivelul 1 și planșa 1. Planșele sunt, în ordine: 1 casa cu bradul, 2 pădurea, 3 bucătăria, 4 piața satului, 5 atelierul, 6 lacul, 7 grajdul, 8 țara dulciurilor, 9 clasa, 10 Polul Nord.
+
 ## Tehnic
 
 HTML + CSS + JavaScript, fără biblioteci și fără sunet. Desenele se fac pe un canvas de 1600×900, scalat după ecran. Fundalul continuă până la marginile ecranului, deci jocul umple tot ecranul, fără benzi negre, iar ascunzătorile rămân întregi pe orice ecran.

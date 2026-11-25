@@ -38,11 +38,22 @@
   let level = 1;
   const nextLevel = () => (level < Game.LEVELS ? level + 1 : 1);
 
+  // for testing: index.html?nivel=3&plansa=9 starts at that level and place
+  // (place 1..10); only the first game uses them, the next levels start at place 1
+  const params = new URLSearchParams(location.search);
+  const num = (name, max) => {
+    const v = parseInt(params.get(name), 10);
+    return v >= 1 && v <= max ? v : 1;
+  };
+  let testScene = num('plansa', Game.SCENES) - 1;
+  const firstLevel = num('nivel', Game.LEVELS);
+
   function play(lvl) {
     level = lvl;
     $('start').hidden = true;
     $('btnAgain').hidden = true;
-    E.go(Game.play(showAgain, level));
+    E.go(Game.play(showAgain, level, testScene));
+    testScene = 0;
   }
 
   /** The end button shows Bubu, an arrow and the stars of the next level. */
@@ -54,7 +65,7 @@
     $('btnAgain').hidden = false;
   }
 
-  $('btnPlay').addEventListener('click', () => play(1));
+  $('btnPlay').addEventListener('click', () => play(firstLevel));
   $('btnAgain').addEventListener('click', () => play(nextLevel()));
 
   $('btnFullscreen').addEventListener('click', () => {
@@ -92,7 +103,7 @@
   $('bookPrev').addEventListener('click', () => { if (page > 0) { page--; turned(); } });
   $('bookNext').addEventListener('click', () => {
     if (page < PAGES.length - 1) { page++; turned(); }
-    else { closeBook(); play(1); }
+    else { closeBook(); play(firstLevel); }
   });
   $('bookClose').addEventListener('click', closeBook);
   document.addEventListener('keydown', e => {

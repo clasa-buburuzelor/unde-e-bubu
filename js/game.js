@@ -1528,7 +1528,8 @@
    * another hiding place.
    */
   Game.LEVELS = 3;
-  Game.play = function (onEnd, level) {
+  Game.SCENES = SCENES.length;
+  Game.play = function (onEnd, level, firstScene) {
     level = level || 1;
     const depth = level === 1 ? 0.16 : 0.26;
     let moveT = 0, nextMove = 4, sink = 0, moving = -1;   // level 3: Bubu changes her hiding place
@@ -1564,7 +1565,7 @@
       darkIcon = icon;
     }
 
-    loadScene(0);
+    loadScene(E.clamp(firstScene || 0, 0, SCENES.length - 1));
     newRound();
     // the level, shown as stars at the start
     E.pop('⭐'.repeat(level), 800, 300, { emoji: true, size: 110, max: 2 });
