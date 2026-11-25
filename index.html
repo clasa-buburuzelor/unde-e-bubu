@@ -47,8 +47,13 @@
     <button class="book-close" id="bookClose" type="button" aria-label="Închide povestea">✕</button>
   </section>
 
-  <!-- ===== Replay button shown at the end ===== -->
-  <button class="play-btn play-btn--again" id="btnAgain" type="button" aria-label="Joacă din nou" hidden>🔁</button>
+  <!-- ===== Button shown at the end: play the next (harder) level ===== -->
+  <!-- Bubu + a big arrow + as many stars as the next level (3 levels; after the last one: 🔁, from the start) -->
+  <button class="again" id="btnAgain" type="button" aria-label="Joacă din nou, mai greu" hidden>
+    <span class="again-stars" id="againStars" aria-hidden="true">⭐⭐</span>
+    <img class="again-bubu" src="assets/bubu.webp" alt="">
+    <span class="again-arrow" id="againArrow" aria-hidden="true">▶</span>
+  </button>
 
   <noscript><p class="noscript">Pentru acest joc trebuie activat JavaScript în browser.</p></noscript>
 

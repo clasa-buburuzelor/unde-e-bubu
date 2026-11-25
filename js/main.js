@@ -34,14 +34,28 @@
     E.go(Game.start());
   }
 
-  function play() {
+  // three levels, each one harder; after the last one the game starts again
+  let level = 1;
+  const nextLevel = () => (level < Game.LEVELS ? level + 1 : 1);
+
+  function play(lvl) {
+    level = lvl;
     $('start').hidden = true;
     $('btnAgain').hidden = true;
-    E.go(Game.play(() => { $('btnAgain').hidden = false; }));
+    E.go(Game.play(showAgain, level));
   }
 
-  $('btnPlay').addEventListener('click', play);
-  $('btnAgain').addEventListener('click', play);
+  /** The end button shows Bubu, an arrow and the stars of the next level. */
+  function showAgain() {
+    const next = nextLevel();
+    $('againStars').textContent = '⭐'.repeat(next);
+    $('againArrow').textContent = next > 1 ? '▶' : '🔁';
+    $('btnAgain').setAttribute('aria-label', next > 1 ? 'Joacă din nou, mai greu' : 'Joacă din nou de la început');
+    $('btnAgain').hidden = false;
+  }
+
+  $('btnPlay').addEventListener('click', () => play(1));
+  $('btnAgain').addEventListener('click', () => play(nextLevel()));
 
   $('btnFullscreen').addEventListener('click', () => {
     const d = document;
@@ -78,7 +92,7 @@
   $('bookPrev').addEventListener('click', () => { if (page > 0) { page--; turned(); } });
   $('bookNext').addEventListener('click', () => {
     if (page < PAGES.length - 1) { page++; turned(); }
-    else { closeBook(); play(); }
+    else { closeBook(); play(1); }
   });
   $('bookClose').addEventListener('click', closeBook);
   document.addEventListener('keydown', e => {

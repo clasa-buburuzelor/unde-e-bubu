@@ -15,6 +15,9 @@
  * lights come back on, Bubu peeks out of her hiding place: her red hat and the
  * top of her head show (always, from the first moment: a delayed clue
  * confused the children).
+ * Three levels, for the children who finish quickly: on level 2 she hides
+ * deeper (almost only the hat shows), on level 3 she also runs to another
+ * hiding place every few seconds.
  */
 (function () {
   'use strict';
@@ -1447,13 +1450,22 @@
   /** Progress at the top: the places, then the stars for this place. */
   // the box at the top holds one icon per place and then the stars
   const ICON_GAP = 54, STAR_GAP = 66, BAR_PAD = 26;
-  const BAR_W = BAR_PAD * 2 + SCENES.length * ICON_GAP + 20 + PER_SCENE * STAR_GAP;
+  const LEVEL_W = 72;                 // the level badge at the left
+  const BAR_W = BAR_PAD * 2 + LEVEL_W + SCENES.length * ICON_GAP + 20 + PER_SCENE * STAR_GAP;
   const BAR_X = 800 - BAR_W / 2;
-  const ICON_X = i => BAR_X + BAR_PAD + ICON_GAP / 2 + i * ICON_GAP;
-  const STAR_X = i => BAR_X + BAR_PAD + SCENES.length * ICON_GAP + 20 + STAR_GAP / 2 + i * STAR_GAP;
-  function drawProgress(c, sceneIdx, found) {
+  const ICON_X = i => BAR_X + BAR_PAD + LEVEL_W + ICON_GAP / 2 + i * ICON_GAP;
+  const STAR_X = i => BAR_X + BAR_PAD + LEVEL_W + SCENES.length * ICON_GAP + 20 + STAR_GAP / 2 + i * STAR_GAP;
+  const LEVEL_COLORS = ['#43a047', '#1e88e5', '#8e24aa'];
+  function drawProgress(c, sceneIdx, found, level) {
     c.fillStyle = 'rgba(30,10,10,0.45)';
     Art.roundRect(c, BAR_X, 12, BAR_W, 76, 38); c.fill();
+    // level: a big digit in a coloured circle (the children know digits)
+    const lx = BAR_X + BAR_PAD + 24;
+    c.fillStyle = LEVEL_COLORS[level - 1];
+    c.beginPath(); c.arc(lx, 50, 30, 0, Math.PI * 2); c.fill();
+    c.strokeStyle = '#fff'; c.lineWidth = 4; c.stroke();
+    c.font = `800 44px ${E.font}`; c.textAlign = 'center'; c.textBaseline = 'middle';
+    c.fillStyle = '#fff'; c.fillText(String(level), lx, 53);
     SCENES.forEach((s, i) => {
       const x = ICON_X(i);
       c.globalAlpha = i <= sceneIdx ? 1 : 0.35;
@@ -1477,17 +1489,20 @@
    * She is drawn BEFORE the object, so the object hides her body; the part
    * of her that is behind the edge is also cut off, so it never shows next
    * to a thin object.
+   * depth: how far below the edge her middle is (0.16 = hat and the top of
+   * her head, 0.26 = almost only the hat). sink: 0..1, she ducks down out of
+   * sight (on level 3 she ducks before she runs to another hiding place).
    */
-  function drawBubuPeek(c, t) {
+  function drawBubuPeek(c, t, depth, sink) {
     const S = t.s || 120;
     const out = 1 + Math.sin(E.time * 4) * 4;          // slides a little out and in
     c.save();
     c.translate(t.x, t.y);
     c.rotate(t.a + Math.PI / 2);                        // from here on, "up" is out of the hiding place
     c.beginPath(); c.rect(-S * 1.5, -S * 2, S * 3, S * 2 + 6); c.clip();
-    c.translate(0, -out);
+    c.translate(0, -out + (sink || 0) * S * 0.7);
     c.rotate(Math.sin(E.time * 3) * 0.12);
-    drawBubu(c, 0, S * 0.16, S, false);           // only the hat and the top of her head stick out
+    drawBubu(c, 0, S * (depth || 0.16), S, false);
     c.restore();
   }
 
@@ -1506,7 +1521,17 @@
   };
 
   // ------------------------------------------------------------ the game
-  Game.play = function (onEnd) {
+  /**
+   * level 1: the hat and the top of Bubu's head stick out.
+   * level 2: she hides deeper (almost only the hat shows).
+   * level 3: like level 2, and every few seconds she ducks and runs to
+   * another hiding place.
+   */
+  Game.LEVELS = 3;
+  Game.play = function (onEnd, level) {
+    level = level || 1;
+    const depth = level === 1 ? 0.16 : 0.26;
+    let moveT = 0, nextMove = 4, sink = 0, moving = -1;   // level 3: Bubu changes her hiding place
     let sceneIdx = 0, scene = null, places = null, order = null;
     let round = 0, found = 0;        // within the current place
     let hideIn = null;               // where Bubu is now
@@ -1527,6 +1552,7 @@
 
     function newRound() {
       hideIn = places[order[round]];
+      moveT = 0; nextMove = E.rand(3.5, 5); sink = 0; moving = -1;
       const fr = E.shuffle(scene.friends);
       places.forEach((p, i) => { p.friend = fr[i % fr.length]; p.shake = 0; });
       peeks.clear();
@@ -1540,6 +1566,8 @@
 
     loadScene(0);
     newRound();
+    // the level, shown as stars at the start
+    E.pop('⭐'.repeat(level), 800, 300, { emoji: true, size: 110, max: 2 });
 
     return {
       update(dt) {
@@ -1556,6 +1584,22 @@
           this.pendingScene = undefined;
         }
         if (state === 'dark' && st <= 0) state = 'seek';
+        // level 3: every few seconds Bubu ducks (0.35 s) and comes up somewhere else (0.35 s)
+        if (level === 3 && state === 'seek' && !peeks.has(hideIn)) {
+          if (moving < 0) {
+            moveT += dt;
+            if (moveT > nextMove) moving = 0;
+          } else {
+            const before = moving;
+            moving += dt;
+            if (before < 0.35 && moving >= 0.35) {
+              const free = places.filter(p => p !== hideIn && !peeks.has(p));
+              if (free.length) hideIn = E.pick(free);
+            }
+            if (moving >= 0.7) { moving = -1; moveT = 0; nextMove = E.rand(3.5, 5); }
+          }
+          sink = moving < 0 ? 0 : moving < 0.35 ? moving / 0.35 : (0.7 - moving) / 0.35;
+        } else sink = 0;
         if (flyStar) {
           flyStar.t += dt / 0.9;
           if (flyStar.t >= 1) { flyStar = null; found++; }
@@ -1605,7 +1649,7 @@
               else drawBubu(c, b.x, b.y, 125, true);
             } else Art.emoji(c, pk.who, x, y, 96);
           } else if (bubuPeek && p === hideIn) {
-            drawBubuPeek(c, p.tip);
+            drawBubuPeek(c, p.tip, depth, sink);
           }
           if (p.clip) c.restore();
           drawPlace(c, p, dx);
@@ -1639,7 +1683,7 @@
         }
       },
       drawTop(c) {
-        if (state !== 'end') drawProgress(c, sceneIdx, found);
+        if (state !== 'end') drawProgress(c, sceneIdx, found, level);
         if (flyStar) {
           const k = E.easeInOut(Math.min(1, flyStar.t));
           c.fillStyle = '#ffd54f';
