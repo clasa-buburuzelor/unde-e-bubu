@@ -11,8 +11,9 @@
  *
  * Made for 6-year-olds after one computer lesson: only clicks, big targets,
  * no mistakes, nothing to read, no voice, no pointing hand. As soon as the
- * lights come back on, only the tip of Bubu's red hat sticks out of her
- * hiding place (always, from the first moment: a delayed clue confused the children).
+ * lights come back on, Bubu peeks out of her hiding place: her red hat and the
+ * top of her head show (always, from the first moment: a delayed clue
+ * confused the children).
  */
 (function () {
   'use strict';
@@ -23,12 +24,13 @@
 
   // ------------------------------------------------------------ the hiding places
   // hit: clickable rectangle · from/to: where the hidden one waits / peeks out
-  // (it is drawn BEFORE the object, so it comes out from behind it).
+  // (it is drawn BEFORE the object, so it comes out from behind it) ·
+  // tip: where Bubu peeks out while hiding (see drawBubuPeek).
   function roomPlaces() {
     return [
       {
         id: 'curtain', noShadow: true, hit: { x: 985, y: 95, w: 120, h: 390 },
-        from: { x: 1045, y: 300 }, to: { x: 1160, y: 300 }, tip: { x: 1075, y: 320, a: 0 },
+        from: { x: 1045, y: 300 }, to: { x: 1160, y: 300 }, tip: { x: 1082, y: 320, a: 0 },
         draw(c) {
           c.fillStyle = '#b71c1c';
           c.beginPath();
@@ -44,12 +46,12 @@
       },
       {
         id: 'snowman', hit: { x: 1190, y: 220, w: 160, h: 210 }, clip: WINDOW,
-        from: { x: 1275, y: 360 }, to: { x: 1275, y: 215 }, tip: { x: 1300, y: 300, a: -0.35 },
+        from: { x: 1275, y: 360 }, to: { x: 1158, y: 330 }, tip: { x: 1228, y: 345, a: -2.4, s: 100 },
         draw(c) { Art.snowman(c, 1275, 428, 150); }
       },
       {
         id: 'stocking', noShadow: true, hit: { x: 585, y: 405, w: 120, h: 170 },
-        from: { x: 640, y: 500 }, to: { x: 640, y: 350 }, tip: { x: 640, y: 445, a: -1.57 },
+        from: { x: 640, y: 500 }, to: { x: 640, y: 350 }, tip: { x: 640, y: 424, a: -1.57, s: 80 },
         draw(c) {
           c.fillStyle = '#d32f2f';
           c.beginPath();
@@ -65,7 +67,7 @@
       },
       {
         id: 'tree', hit: { x: 90, y: 280, w: 320, h: 570 },
-        from: { x: 230, y: 650 }, to: { x: 95, y: 560 }, tip: { x: 165, y: 700, a: 3.14 },
+        from: { x: 230, y: 650 }, to: { x: 95, y: 560 }, tip: { x: 325, y: 565, a: 0, s: 100 },
         draw(c) {
           Art.bigTree(c, 250, 850, 560);
           const balls = [[200, 440, '#e53935'], [300, 520, '#1e88e5'], [180, 620, '#fbc02d'], [330, 680, '#8e44ad'], [250, 360, '#43a047'], [140, 740, '#ec407a'], [280, 760, '#fb8c00']];
@@ -76,7 +78,7 @@
       },
       {
         id: 'armchair', hit: { x: 1170, y: 540, w: 240, h: 300 },
-        from: { x: 1290, y: 660 }, to: { x: 1290, y: 500 }, tip: { x: 1290, y: 585, a: -1.75 },
+        from: { x: 1290, y: 660 }, to: { x: 1290, y: 500 }, tip: { x: 1290, y: 566, a: -1.6 },
         draw(c) {
           c.fillStyle = '#2e6b8f';
           Art.roundRect(c, 1195, 560, 190, 200, 40); c.fill();          // backrest
@@ -93,7 +95,7 @@
       },
       {
         id: 'basket', hit: { x: 745, y: 690, w: 210, h: 160 },
-        from: { x: 850, y: 790 }, to: { x: 850, y: 650 }, tip: { x: 870, y: 740, a: -1.4 },
+        from: { x: 850, y: 790 }, to: { x: 850, y: 650 }, tip: { x: 880, y: 722, a: -1.5 },
         draw(c) {
           // toys sticking out
           c.fillStyle = '#e53935'; c.beginPath(); c.arc(800, 720, 30, 0, Math.PI * 2); c.fill();
@@ -110,12 +112,12 @@
       },
       {
         id: 'gift', hit: { x: 395, y: 670, w: 175, h: 180 },
-        from: { x: 482, y: 770 }, to: { x: 482, y: 620 }, tip: { x: 430, y: 722, a: -1.9 },
+        from: { x: 482, y: 770 }, to: { x: 482, y: 620 }, tip: { x: 440, y: 702, a: -1.7 },
         draw(c) { Art.gift(c, 482, 775, 165, '#43a047'); }
       },
       {
         id: 'pile', hit: { x: 1430, y: 590, w: 165, h: 260 },
-        from: { x: 1510, y: 740 }, to: { x: 1510, y: 560 }, tip: { x: 1455, y: 760, a: 3.14 },
+        from: { x: 1510, y: 740 }, to: { x: 1510, y: 560 }, tip: { x: 1440, y: 800, a: 3.14 },
         draw(c) {
           Art.gift(c, 1510, 800, 140, '#1e88e5');
           Art.gift(c, 1500, 702, 105, '#e53935');
@@ -204,7 +206,7 @@
     return [
       {
         id: 'cabin', hit: { x: 1235, y: 370, w: 280, h: 260 },
-        from: { x: 1375, y: 540 }, to: { x: 1375, y: 330 }, tip: { x: 1420, y: 432, a: -1.2 },
+        from: { x: 1375, y: 540 }, to: { x: 1375, y: 330 }, tip: { x: 1490, y: 560, a: 0 },
         draw(c) {
           c.fillStyle = '#8d5a33'; c.fillRect(1260, 470, 230, 150);
           c.strokeStyle = '#6d4022'; c.lineWidth = 4;
@@ -218,7 +220,7 @@
       },
       {
         id: 'birdhouse', noShadow: true, hit: { x: 925, y: 235, w: 170, h: 370 },
-        from: { x: 1010, y: 360 }, to: { x: 1010, y: 195 }, tip: { x: 1065, y: 360, a: 0 },
+        from: { x: 1010, y: 360 }, to: { x: 1010, y: 195 }, tip: { x: 1080, y: 360, a: 0, s: 100 },
         draw(c) {
           c.fillStyle = '#6d4c41'; c.fillRect(1000, 400, 20, 210);
           c.fillStyle = '#c0392b'; c.fillRect(940, 300, 140, 115);
@@ -229,7 +231,7 @@
       },
       {
         id: 'rock', hit: { x: 1050, y: 545, w: 200, h: 125 },
-        from: { x: 1150, y: 640 }, to: { x: 1150, y: 500 }, tip: { x: 1150, y: 585, a: -1.57 },
+        from: { x: 1150, y: 640 }, to: { x: 1150, y: 500 }, tip: { x: 1150, y: 562, a: -1.57 },
         draw(c) {
           c.fillStyle = '#78909c';
           c.beginPath(); c.moveTo(1055, 665); c.quadraticCurveTo(1045, 570, 1125, 555); c.quadraticCurveTo(1235, 545, 1250, 665); c.closePath(); c.fill();
@@ -239,7 +241,7 @@
       },
       {
         id: 'stump', hit: { x: 700, y: 585, w: 140, h: 105 },
-        from: { x: 770, y: 660 }, to: { x: 770, y: 540 }, tip: { x: 790, y: 632, a: -1.4 },
+        from: { x: 770, y: 660 }, to: { x: 770, y: 540 }, tip: { x: 775, y: 600, a: -1.57, s: 100 },
         draw(c) {
           c.fillStyle = '#795548'; c.fillRect(710, 610, 120, 75);
           c.fillStyle = '#d7b38c'; c.beginPath(); c.ellipse(770, 610, 60, 16, 0, 0, 6.3); c.fill();
@@ -248,22 +250,22 @@
       },
       {
         id: 'pine', hit: { x: 70, y: 300, w: 320, h: 570 },
-        from: { x: 230, y: 650 }, to: { x: 85, y: 560 }, tip: { x: 130, y: 760, a: 3.14 },
+        from: { x: 230, y: 650 }, to: { x: 85, y: 560 }, tip: { x: 322, y: 775, a: 0, s: 100 },
         draw(c) { Art.pine(c, 230, 880, 560, '#1b5e3a'); }
       },
       {
         id: 'snowman', hit: { x: 510, y: 520, w: 180, h: 340 },
-        from: { x: 600, y: 730 }, to: { x: 735, y: 720 }, tip: { x: 665, y: 760, a: 0 },
+        from: { x: 600, y: 730 }, to: { x: 735, y: 720 }, tip: { x: 676, y: 800, a: -0.2, s: 100 },
         draw(c) { Art.snowman(c, 600, 860, 210); }
       },
       {
         id: 'sled', hit: { x: 840, y: 740, w: 240, h: 120 },
-        from: { x: 955, y: 800 }, to: { x: 955, y: 680 }, tip: { x: 1000, y: 778, a: -1.57 },
+        from: { x: 955, y: 800 }, to: { x: 955, y: 680 }, tip: { x: 990, y: 752, a: -1.57 },
         draw(c) { Art.sleigh(c, 955, 830, 230); }
       },
       {
         id: 'mound', hit: { x: 1120, y: 715, w: 270, h: 145 },
-        from: { x: 1255, y: 820 }, to: { x: 1255, y: 680 }, tip: { x: 1230, y: 765, a: -1.65 },
+        from: { x: 1255, y: 820 }, to: { x: 1255, y: 680 }, tip: { x: 1240, y: 745, a: -1.65 },
         draw(c) { Art.mound(c, 1255, 850, 280, 140); }
       }
     ];
@@ -295,7 +297,7 @@
     return [
       {
         id: 'cupboard', hit: { x: 1170, y: 170, w: 260, h: 460 },
-        from: { x: 1300, y: 400 }, to: { x: 1495, y: 400 }, tip: { x: 1405, y: 300, a: 0 },
+        from: { x: 1300, y: 400 }, to: { x: 1495, y: 400 }, tip: { x: 1420, y: 330, a: 0, s: 110 },
         draw(c) {
           c.fillStyle = '#6d4c41'; c.fillRect(1180, 180, 240, 445);
           c.fillStyle = '#8d6e63'; c.fillRect(1192, 195, 104, 415); c.fillRect(1304, 195, 104, 415);
@@ -305,7 +307,7 @@
       },
       {
         id: 'table', hit: { x: 500, y: 470, w: 420, h: 240 },
-        from: { x: 710, y: 620 }, to: { x: 710, y: 440 }, tip: { x: 780, y: 556, a: -1.57 },
+        from: { x: 710, y: 620 }, to: { x: 710, y: 440 }, tip: { x: 690, y: 542, a: -1.57 },
         draw(c) {
           // things on the table
           c.fillStyle = '#e53935'; c.fillRect(560, 495, 50, 45);
@@ -318,12 +320,12 @@
       },
       {
         id: 'sack', hit: { x: 120, y: 580, w: 260, h: 280 },
-        from: { x: 250, y: 720 }, to: { x: 250, y: 545 }, tip: { x: 250, y: 628, a: -1.57 },
+        from: { x: 250, y: 720 }, to: { x: 250, y: 545 }, tip: { x: 250, y: 612, a: -1.57 },
         draw(c) { Art.sack(c, 250, 745, 300, '#a1887f'); }
       },
       {
         id: 'drum', hit: { x: 395, y: 715, w: 150, h: 145 },
-        from: { x: 470, y: 800 }, to: { x: 470, y: 665 }, tip: { x: 470, y: 762, a: -1.57 },
+        from: { x: 470, y: 800 }, to: { x: 470, y: 665 }, tip: { x: 470, y: 745, a: -1.57, s: 100 },
         draw(c) {
           c.fillStyle = '#c62828'; c.fillRect(405, 745, 130, 100);
           c.strokeStyle = '#ffd54f'; c.lineWidth = 5;
@@ -334,7 +336,7 @@
       },
       {
         id: 'chest', hit: { x: 930, y: 660, w: 240, h: 195 },
-        from: { x: 1050, y: 760 }, to: { x: 1050, y: 600 }, tip: { x: 1050, y: 708, a: -1.57 },
+        from: { x: 1050, y: 760 }, to: { x: 1050, y: 600 }, tip: { x: 1050, y: 690, a: -1.57 },
         draw(c) {
           c.fillStyle = '#8d5a33'; c.fillRect(945, 720, 210, 125);
           c.fillStyle = '#a66b3d';
@@ -345,7 +347,7 @@
       },
       {
         id: 'boxes', hit: { x: 1430, y: 580, w: 165, h: 280 },
-        from: { x: 1510, y: 740 }, to: { x: 1510, y: 520 }, tip: { x: 1462, y: 722, a: 3.14 },
+        from: { x: 1510, y: 740 }, to: { x: 1510, y: 520 }, tip: { x: 1452, y: 720, a: 3.14, s: 100 },
         draw(c) {
           const box = (x, y, w, h) => {
             c.fillStyle = '#c8a26b'; c.fillRect(x, y, w, h);
@@ -392,7 +394,7 @@
     return [
       {
         id: 'cabinet', noShadow: true, hit: { x: 130, y: 110, w: 300, h: 230 },
-        from: { x: 280, y: 225 }, to: { x: 480, y: 225 }, tip: { x: 415, y: 200, a: 0 },
+        from: { x: 280, y: 225 }, to: { x: 480, y: 225 }, tip: { x: 420, y: 220, a: 0, s: 100 },
         draw(c) {
           c.fillStyle = '#a1887f'; c.fillRect(140, 120, 280, 210);
           c.fillStyle = '#bcaaa4'; c.fillRect(152, 132, 124, 186); c.fillRect(284, 132, 124, 186);
@@ -401,7 +403,7 @@
       },
       {
         id: 'fridge', hit: { x: 1250, y: 170, w: 200, h: 480 },
-        from: { x: 1350, y: 400 }, to: { x: 1515, y: 400 }, tip: { x: 1435, y: 260, a: 0 },
+        from: { x: 1350, y: 400 }, to: { x: 1515, y: 400 }, tip: { x: 1440, y: 300, a: 0 },
         draw(c) {
           c.fillStyle = '#eceff1'; Art.roundRect(c, 1260, 180, 180, 465, 22); c.fill();
           c.fillStyle = '#cfd8dc'; c.fillRect(1260, 370, 180, 8);
@@ -411,7 +413,7 @@
       },
       {
         id: 'pot', noShadow: true, hit: { x: 560, y: 360, w: 240, h: 160 },
-        from: { x: 680, y: 450 }, to: { x: 680, y: 310 }, tip: { x: 720, y: 405, a: -1.4 },
+        from: { x: 680, y: 450 }, to: { x: 680, y: 310 }, tip: { x: 700, y: 392, a: -1.57, s: 110 },
         draw(c) {
           c.fillStyle = '#455a64'; c.fillRect(580, 400, 200, 110);
           c.fillStyle = '#607d8b'; c.fillRect(570, 392, 220, 18);
@@ -425,7 +427,7 @@
       },
       {
         id: 'table', hit: { x: 140, y: 560, w: 420, h: 240 },
-        from: { x: 350, y: 700 }, to: { x: 350, y: 510 }, tip: { x: 420, y: 585, a: -1.57 },
+        from: { x: 350, y: 700 }, to: { x: 350, y: 510 }, tip: { x: 420, y: 574, a: -1.57 },
         draw(c) {
           c.fillStyle = '#795548'; c.beginPath(); c.ellipse(260, 560, 34, 14, 0, 0, 6.3); c.fill();   // plate
           c.fillStyle = '#b5651d'; c.beginPath(); c.arc(260, 548, 16, 0, 6.3); c.fill();
@@ -436,7 +438,7 @@
       },
       {
         id: 'flour', hit: { x: 860, y: 640, w: 230, h: 220 },
-        from: { x: 975, y: 760 }, to: { x: 975, y: 600 }, tip: { x: 1010, y: 680, a: -1.4 },
+        from: { x: 975, y: 760 }, to: { x: 975, y: 600 }, tip: { x: 990, y: 665, a: -1.57 },
         draw(c) {
           Art.sack(c, 975, 765, 230, '#f5f5f5');
           Art.emoji(c, '🌾', 975, 790, 50);
@@ -444,7 +446,7 @@
       },
       {
         id: 'chair', hit: { x: 1150, y: 560, w: 170, h: 300 },
-        from: { x: 1235, y: 700 }, to: { x: 1235, y: 520 }, tip: { x: 1270, y: 590, a: -1.4 },
+        from: { x: 1235, y: 700 }, to: { x: 1235, y: 520 }, tip: { x: 1240, y: 572, a: -1.57 },
         draw(c) {
           c.fillStyle = '#8d5a33';
           Art.roundRect(c, 1160, 570, 150, 150, 18); c.fill();
@@ -480,7 +482,7 @@
     return [
       {
         id: 'gate', hit: { x: 1240, y: 400, w: 260, h: 340 },
-        from: { x: 1370, y: 560 }, to: { x: 1370, y: 360 }, tip: { x: 1430, y: 440, a: -1.4 },
+        from: { x: 1370, y: 560 }, to: { x: 1370, y: 360 }, tip: { x: 1420, y: 418, a: -1.57 },
         draw(c) {
           c.fillStyle = '#8d5a33'; c.fillRect(1250, 420, 240, 300);
           c.strokeStyle = '#5d3a22'; c.lineWidth = 8;
@@ -490,7 +492,7 @@
       },
       {
         id: 'bales', hit: { x: 120, y: 520, w: 340, h: 340 },
-        from: { x: 290, y: 690 }, to: { x: 290, y: 470 }, tip: { x: 350, y: 545, a: -1.57 },
+        from: { x: 290, y: 690 }, to: { x: 290, y: 470 }, tip: { x: 300, y: 550, a: -1.57, s: 110 },
         draw(c) {
           const bale = (x, y) => {
             c.fillStyle = '#e6b94a'; c.fillRect(x, y, 160, 100);
@@ -503,7 +505,7 @@
       },
       {
         id: 'barrel', hit: { x: 490, y: 620, w: 150, h: 230 },
-        from: { x: 565, y: 740 }, to: { x: 565, y: 580 }, tip: { x: 600, y: 650, a: -1.4 },
+        from: { x: 565, y: 740 }, to: { x: 565, y: 580 }, tip: { x: 565, y: 632, a: -1.57, s: 100 },
         draw(c) {
           c.fillStyle = '#8d5a33';
           c.beginPath(); c.moveTo(505, 640); c.quadraticCurveTo(490, 745, 505, 850); c.lineTo(625, 850); c.quadraticCurveTo(640, 745, 625, 640); c.closePath(); c.fill();
@@ -513,7 +515,7 @@
       },
       {
         id: 'carrots', hit: { x: 660, y: 640, w: 210, h: 230 },
-        from: { x: 765, y: 760 }, to: { x: 765, y: 600 }, tip: { x: 720, y: 680, a: -1.8 },
+        from: { x: 765, y: 760 }, to: { x: 765, y: 600 }, tip: { x: 690, y: 680, a: -1.7, s: 100 },
         draw(c) {
           for (let i = 0; i < 4; i++) Art.carrot(c, 730 + i * 24, 650 - (i % 2) * 10, 70, -0.3 + i * 0.2);
           Art.sack(c, 765, 770, 210, '#ef6c00');
@@ -521,12 +523,12 @@
       },
       {
         id: 'sleigh', hit: { x: 900, y: 680, w: 330, h: 190 },
-        from: { x: 1050, y: 800 }, to: { x: 1050, y: 620 }, tip: { x: 960, y: 735, a: -1.8 },
+        from: { x: 1050, y: 800 }, to: { x: 1050, y: 620 }, tip: { x: 990, y: 735, a: -1.57 },
         draw(c) { Art.sleigh(c, 1060, 840, 320); }
       },
       {
         id: 'haypile', hit: { x: 1400, y: 690, w: 200, h: 180 },
-        from: { x: 1500, y: 800 }, to: { x: 1500, y: 640 }, tip: { x: 1460, y: 740, a: -1.9 },
+        from: { x: 1500, y: 800 }, to: { x: 1500, y: 640 }, tip: { x: 1500, y: 705, a: -1.65, s: 100 },
         draw(c) {
           c.fillStyle = '#e6b94a';
           c.beginPath(); c.moveTo(1405, 870); c.quadraticCurveTo(1430, 690, 1500, 700); c.quadraticCurveTo(1580, 690, 1600, 870); c.closePath(); c.fill();
@@ -567,7 +569,7 @@
     return [
       {
         id: 'iceberg', hit: { x: 560, y: 360, w: 320, h: 260 },
-        from: { x: 720, y: 520 }, to: { x: 720, y: 330 }, tip: { x: 790, y: 440, a: -1.3 },
+        from: { x: 720, y: 520 }, to: { x: 720, y: 330 }, tip: { x: 790, y: 490, a: -0.58 },
         draw(c) {
           c.fillStyle = '#b3e5fc';
           c.beginPath(); c.moveTo(570, 610); c.lineTo(640, 420); c.lineTo(720, 380); c.lineTo(800, 450); c.lineTo(870, 610); c.closePath(); c.fill();
@@ -577,7 +579,7 @@
       },
       {
         id: 'igloo', hit: { x: 1090, y: 430, w: 380, h: 280 },
-        from: { x: 1280, y: 600 }, to: { x: 1280, y: 400 }, tip: { x: 1350, y: 485, a: -1.3 },
+        from: { x: 1280, y: 600 }, to: { x: 1280, y: 400 }, tip: { x: 1300, y: 522, a: -1.57 },
         draw(c) {
           c.fillStyle = '#ffffff';
           c.beginPath(); c.arc(1280, 700, 180, Math.PI, 0); c.closePath(); c.fill();
@@ -589,7 +591,7 @@
       },
       {
         id: 'blocks', hit: { x: 140, y: 520, w: 320, h: 270 },
-        from: { x: 300, y: 680 }, to: { x: 300, y: 480 }, tip: { x: 250, y: 560, a: -1.8 },
+        from: { x: 300, y: 680 }, to: { x: 300, y: 480 }, tip: { x: 300, y: 540, a: -1.57, s: 110 },
         draw(c) {
           const blk = (x, y) => { c.fillStyle = '#d6efff'; c.fillRect(x, y, 140, 80); c.strokeStyle = '#9cc9ea'; c.lineWidth = 4; c.strokeRect(x, y, 140, 80); };
           blk(160, 700); blk(300, 700); blk(230, 620); blk(230, 540);
@@ -597,7 +599,7 @@
       },
       {
         id: 'mailbox', hit: { x: 870, y: 500, w: 160, h: 310 },
-        from: { x: 950, y: 600 }, to: { x: 1075, y: 590 }, tip: { x: 1010, y: 580, a: 0 },
+        from: { x: 950, y: 600 }, to: { x: 1075, y: 590 }, tip: { x: 1015, y: 590, a: 0, s: 100 },
         draw(c) {
           c.fillStyle = '#5d4037'; c.fillRect(940, 650, 20, 160);
           c.fillStyle = '#e53935'; Art.roundRect(c, 885, 520, 130, 140, 30); c.fill();
@@ -607,12 +609,12 @@
       },
       {
         id: 'drift', hit: { x: 480, y: 720, w: 320, h: 150 },
-        from: { x: 640, y: 830 }, to: { x: 640, y: 680 }, tip: { x: 700, y: 765, a: -1.4 },
+        from: { x: 640, y: 830 }, to: { x: 640, y: 680 }, tip: { x: 640, y: 745, a: -1.57 },
         draw(c) { Art.mound(c, 640, 860, 320, 150); }
       },
       {
         id: 'giftpile', hit: { x: 1360, y: 680, w: 230, h: 190 },
-        from: { x: 1470, y: 790 }, to: { x: 1470, y: 620 }, tip: { x: 1395, y: 790, a: 3.14 },
+        from: { x: 1470, y: 790 }, to: { x: 1470, y: 620 }, tip: { x: 1365, y: 815, a: 3.14, s: 100 },
         draw(c) {
           Art.gift(c, 1420, 820, 110, '#8e44ad');
           Art.gift(c, 1530, 825, 100, '#43a047');
@@ -875,7 +877,7 @@
     return [
       {
         id: 'stall', hit: { x: 1110, y: 370, w: 320, h: 280 },
-        from: { x: 1270, y: 520 }, to: { x: 1490, y: 520 }, tip: { x: 1400, y: 470, a: 0 },
+        from: { x: 1270, y: 520 }, to: { x: 1490, y: 520 }, tip: { x: 1412, y: 500, a: 0, s: 110 },
         draw(c) {
           c.fillStyle = '#8d5a33'; c.fillRect(1130, 470, 280, 170);
           c.fillStyle = '#a66b3d'; c.fillRect(1120, 540, 300, 26);
@@ -894,7 +896,7 @@
       },
       {
         id: 'towntree', hit: { x: 570, y: 200, w: 380, h: 510 },
-        from: { x: 760, y: 600 }, to: { x: 955, y: 560 }, tip: { x: 865, y: 600, a: 0 },
+        from: { x: 760, y: 600 }, to: { x: 955, y: 560 }, tip: { x: 915, y: 625, a: 0, s: 110 },
         draw(c) {
           Art.bigTree(c, 760, 710, 480);
           const balls = [[720, 360, '#e53935'], [800, 430, '#fbc02d'], [690, 500, '#1e88e5'], [830, 560, '#e53935'], [740, 610, '#8e44ad'], [650, 640, '#fbc02d'], [870, 650, '#43a047']];
@@ -904,7 +906,7 @@
       },
       {
         id: 'well', hit: { x: 1440, y: 560, w: 160, h: 220 },
-        from: { x: 1520, y: 690 }, to: { x: 1520, y: 545 }, tip: { x: 1540, y: 655, a: -1.4 },
+        from: { x: 1520, y: 690 }, to: { x: 1520, y: 545 }, tip: { x: 1522, y: 645, a: -1.57, s: 110 },
         draw(c) {
           c.fillStyle = '#90a4ae'; c.fillRect(1455, 650, 135, 120);
           c.fillStyle = '#78909c';
@@ -914,7 +916,7 @@
       },
       {
         id: 'bench', hit: { x: 150, y: 590, w: 280, h: 180 },
-        from: { x: 290, y: 690 }, to: { x: 290, y: 545 }, tip: { x: 330, y: 625, a: -1.57 },
+        from: { x: 290, y: 690 }, to: { x: 290, y: 545 }, tip: { x: 300, y: 606, a: -1.57 },
         draw(c) {
           c.fillStyle = '#6d4c41';
           c.fillRect(170, 700, 14, 60); c.fillRect(396, 700, 14, 60);
@@ -925,7 +927,7 @@
       },
       {
         id: 'bush', hit: { x: 410, y: 720, w: 220, h: 150 },
-        from: { x: 520, y: 820 }, to: { x: 520, y: 680 }, tip: { x: 565, y: 770, a: -1.3 },
+        from: { x: 520, y: 820 }, to: { x: 520, y: 680 }, tip: { x: 540, y: 728, a: -1.57, s: 100 },
         draw(c) {
           c.fillStyle = '#2e7d32';
           c.beginPath(); c.arc(470, 810, 55, 0, 6.3); c.arc(540, 790, 65, 0, 6.3); c.arc(590, 820, 45, 0, 6.3); c.fill();
@@ -936,7 +938,7 @@
       },
       {
         id: 'cart', hit: { x: 1140, y: 640, w: 280, h: 220 },
-        from: { x: 1270, y: 780 }, to: { x: 1270, y: 610 }, tip: { x: 1165, y: 760, a: 3.14 },
+        from: { x: 1270, y: 780 }, to: { x: 1270, y: 610 }, tip: { x: 1152, y: 765, a: 3.14, s: 100 },
         draw(c) {
           Art.gift(c, 1220, 700, 90, '#e53935');
           Art.gift(c, 1310, 705, 80, '#1e88e5');
@@ -974,7 +976,7 @@
     return [
       {
         id: 'hut', hit: { x: 1170, y: 370, w: 300, h: 240 },
-        from: { x: 1320, y: 530 }, to: { x: 1505, y: 530 }, tip: { x: 1425, y: 520, a: 0 },
+        from: { x: 1320, y: 530 }, to: { x: 1505, y: 530 }, tip: { x: 1200, y: 540, a: 3.14 },
         draw(c) {
           c.fillStyle = '#7b4a2a'; c.fillRect(1200, 460, 240, 145);
           c.strokeStyle = '#5d3a22'; c.lineWidth = 4;
@@ -987,7 +989,7 @@
       },
       {
         id: 'fort', hit: { x: 940, y: 600, w: 220, h: 170 },
-        from: { x: 1050, y: 720 }, to: { x: 1050, y: 570 }, tip: { x: 1080, y: 662, a: -1.45 },
+        from: { x: 1050, y: 720 }, to: { x: 1050, y: 570 }, tip: { x: 1065, y: 662, a: -1.57 },
         draw(c) {
           c.fillStyle = '#f5f9ff'; c.fillRect(950, 660, 200, 100);
           for (let x = 950; x < 1150; x += 50) c.fillRect(x, 630, 30, 32);
@@ -997,7 +999,7 @@
       },
       {
         id: 'woodpile', hit: { x: 140, y: 620, w: 300, h: 190 },
-        from: { x: 290, y: 740 }, to: { x: 290, y: 580 }, tip: { x: 330, y: 662, a: -1.57 },
+        from: { x: 290, y: 740 }, to: { x: 290, y: 580 }, tip: { x: 320, y: 635, a: -1.57 },
         draw(c) {
           const rows = [[160, 760, 6], [190, 712, 5], [220, 664, 4]];
           for (const [x0, y, n] of rows) for (let i = 0; i < n; i++) {
@@ -1011,7 +1013,7 @@
       },
       {
         id: 'snowman', hit: { x: 450, y: 420, w: 150, h: 290 },
-        from: { x: 520, y: 620 }, to: { x: 630, y: 615 }, tip: { x: 568, y: 625, a: 0 },
+        from: { x: 520, y: 620 }, to: { x: 630, y: 615 }, tip: { x: 580, y: 660, a: -0.25, s: 100 },
         draw(c) {
           Art.snowman(c, 520, 705, 170);
           c.fillStyle = '#43a047'; c.fillRect(470, 570, 100, 14); c.fillRect(540, 570, 16, 50);
@@ -1019,7 +1021,7 @@
       },
       {
         id: 'boat', hit: { x: 610, y: 750, w: 320, h: 120 },
-        from: { x: 770, y: 830 }, to: { x: 770, y: 690 }, tip: { x: 870, y: 795, a: -1.25 },
+        from: { x: 770, y: 830 }, to: { x: 770, y: 690 }, tip: { x: 770, y: 790, a: -1.57, s: 100 },
         draw(c) {
           c.fillStyle = '#c62828';
           c.beginPath(); c.moveTo(620, 860); c.quadraticCurveTo(770, 720, 920, 860); c.closePath(); c.fill();
@@ -1030,7 +1032,7 @@
       },
       {
         id: 'lakepine', hit: { x: 1380, y: 480, w: 220, h: 400 },
-        from: { x: 1490, y: 780 }, to: { x: 1345, y: 765 }, tip: { x: 1428, y: 800, a: 3.14 },
+        from: { x: 1490, y: 780 }, to: { x: 1345, y: 765 }, tip: { x: 1420, y: 780, a: 3.14, s: 100 },
         draw(c) { Art.pine(c, 1490, 885, 380, '#1b5e3a'); }
       }
     ];
@@ -1161,29 +1163,25 @@
   }
 
   /**
-   * Bubu's whole red hat sticks out of her hiding place and wiggles
-   * (easy-medium: clearly visible, but Bubu herself stays hidden).
-   * t = { x, y, a }: the base of the hat (behind the object) and the direction.
+   * Bubu peeks out of her hiding place with her red hat on and wiggles
+   * (easy-medium: the hat and the top of her head show, the rest of her
+   * stays behind the object). t = { x, y, a, s? }: the point on the edge of
+   * the object where she peeks out, the direction she leans out (radians)
+   * and her size (smaller behind small things).
+   * She is drawn BEFORE the object, so the object hides her body; the part
+   * of her that is behind the edge is also cut off, so it never shows next
+   * to a thin object.
    */
-  function drawHatPeek(c, t) {
-    const out = 12 + Math.sin(E.time * 4) * 6;         // slides a little out and in
+  function drawBubuPeek(c, t) {
+    const S = t.s || 120;
+    const out = 2 + Math.sin(E.time * 4) * 7;          // slides a little out and in
     c.save();
-    c.translate(t.x + Math.cos(t.a) * out, t.y + Math.sin(t.a) * out);
-    c.rotate(t.a + Math.sin(E.time * 3) * 0.2);
-    c.scale(1.12, 1.12);
-    // cone (pointing along +x), a bit bent like a real Santa hat
-    c.fillStyle = '#d32f2f';
-    c.beginPath();
-    c.moveTo(0, -30);
-    c.quadraticCurveTo(55, -28, 92, 6);
-    c.quadraticCurveTo(50, 8, 0, 30);
-    c.closePath(); c.fill();
-    c.fillStyle = 'rgba(0,0,0,0.12)';
-    c.beginPath(); c.moveTo(0, 8); c.quadraticCurveTo(50, 8, 92, 6); c.quadraticCurveTo(50, 22, 0, 30); c.closePath(); c.fill();
-    // white fur band and pompom
-    c.fillStyle = '#fff';
-    Art.roundRect(c, -8, -36, 24, 72, 12); c.fill();
-    c.beginPath(); c.arc(96, 6, 17, 0, Math.PI * 2); c.fill();
+    c.translate(t.x, t.y);
+    c.rotate(t.a + Math.PI / 2);                        // from here on, "up" is out of the hiding place
+    c.beginPath(); c.rect(-S * 1.5, -S * 2, S * 3, S * 2 + 6); c.clip();
+    c.translate(0, -out);
+    c.rotate(Math.sin(E.time * 3) * 0.12);
+    drawBubu(c, 0, -S * 0.12, S, false);
     c.restore();
   }
 
@@ -1280,8 +1278,8 @@
       draw(c) {
         E.cachedBg(scene.key, scene.bg);
         if (scene.extra) scene.extra(c);
-        // the tip of Bubu's hat peeks out from the moment the lights come on
-        const hatPeek = (state === 'seek' || (state === 'dark' && this.pendingScene === undefined)) && !peeks.has(hideIn);
+        // Bubu peeks out (hat and head) from the moment the lights come on
+        const bubuPeek = (state === 'seek' || (state === 'dark' && this.pendingScene === undefined)) && !peeks.has(hideIn);
         for (const p of places) {
           const dx = p.shake > 0 ? Math.sin(p.shake * 45) * 8 : 0;
           drawShadow(c, p, scene.shadow);
@@ -1294,8 +1292,8 @@
             const x = E.lerp(p.from.x, p.to.x, Math.max(0, k)), y = E.lerp(p.from.y, p.to.y, Math.max(0, k));
             if (pk.who === 'bubu') drawBubu(c, x, y + (state === 'found' ? Math.abs(Math.sin(E.time * 7)) * -12 : 0), 125, true);
             else Art.emoji(c, pk.who, x, y, 96);
-          } else if (hatPeek && p === hideIn) {
-            drawHatPeek(c, p.tip);
+          } else if (bubuPeek && p === hideIn) {
+            drawBubuPeek(c, p.tip);
           }
           if (p.clip) c.restore();
           drawPlace(c, p, dx);
