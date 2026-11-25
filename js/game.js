@@ -16,8 +16,8 @@
  * top of her head show (always, from the first moment: a delayed clue
  * confused the children).
  * Three levels, for the children who finish quickly: on level 2 she hides
- * deeper (only the tip of the hat shows), on level 3 she also runs to another
- * hiding place every few seconds.
+ * deeper (only the tip of the hat shows), on level 3 the hats of two friends
+ * peek out too, and Bubu changes her hiding place without giving herself away.
  */
 (function () {
   'use strict';
@@ -1493,7 +1493,7 @@
    * her head, 0.36 = only the tip of the hat). sink: 0..1, she ducks down out of
    * sight (on level 3 she ducks before she runs to another hiding place).
    */
-  function drawBubuPeek(c, t, depth, sink) {
+  function drawBubuPeek(c, t, depth, sink, decoy) {
     const S = t.s || 120;
     const out = 1 + Math.sin(E.time * 4) * 4;          // slides a little out and in
     c.save();
@@ -1502,7 +1502,35 @@
     c.beginPath(); c.rect(-S * 1.5, -S * 2, S * 3, S * 2 + 6); c.clip();
     c.translate(0, -out + (sink || 0) * S * 0.7);
     c.rotate(Math.sin(E.time * 3) * 0.12);
-    drawBubu(c, 0, S * (depth || 0.16), S, false);
+    if (decoy) { c.translate(0, S * (depth || 0.16)); drawHat(c, S, decoy); }
+    else drawBubu(c, 0, S * (depth || 0.16), S, false);
+    c.restore();
+  }
+
+  /**
+   * Level 3: the hats of friends hiding in other places (same shape as
+   * Bubu's hat, other colours): the children must look which one is red
+   * with a white pompom.
+   */
+  const DECOYS = [
+    { cone: '#2e7d32', band: '#d32f2f', pom: '#ffd54f' },   // a green elf hat
+    { cone: '#1e88e5', band: '#ffffff', pom: '#ffffff' }    // a blue hat
+  ];
+  /** The same hat as Art.hat (Bubu's), in the given colours, without Bubu. */
+  function drawHat(c, s, col) {
+    c.save();
+    c.translate(s * 0.05, -s * 0.36);
+    c.rotate(0.28);
+    c.fillStyle = col.cone;
+    c.beginPath();
+    c.moveTo(-s * 0.26, 0);
+    c.quadraticCurveTo(-s * 0.05, -s * 0.5, s * 0.34, -s * 0.36);
+    c.lineTo(s * 0.26, 0);
+    c.closePath(); c.fill();
+    c.fillStyle = col.band;
+    Art.roundRect(c, -s * 0.31, -s * 0.07, s * 0.62, s * 0.14, s * 0.07); c.fill();
+    c.fillStyle = col.pom;
+    c.beginPath(); c.arc(s * 0.35, -s * 0.36, s * 0.08, 0, Math.PI * 2); c.fill();
     c.restore();
   }
 
@@ -1524,8 +1552,10 @@
   /**
    * level 1: the hat and the top of Bubu's head stick out.
    * level 2: she hides deeper (only the tip of the hat shows).
-   * level 3: like level 2, and every few seconds she ducks and runs to
-   * another hiding place.
+   * level 3: like level 2; the hats of two friends (green and blue) peek out
+   * of other places, every few seconds all the hats duck and come up in
+   * other places, and when the child clicks a wrong place Bubu quietly
+   * changes her hiding place.
    */
   Game.LEVELS = 3;
   Game.SCENES = SCENES.length;
@@ -1533,6 +1563,7 @@
     level = level || 1;
     const depth = level === 1 ? 0.16 : 0.36;
     let moveT = 0, nextMove = 4, sink = 0, moving = -1;   // level 3: Bubu changes her hiding place
+    const decoys = new Map();        // level 3: place -> the colours of a friend's hat peeking out there
     let sceneIdx = 0, scene = null, places = null, order = null;
     let round = 0, found = 0;        // within the current place
     let hideIn = null;               // where Bubu is now
@@ -1557,6 +1588,24 @@
       const fr = E.shuffle(scene.friends);
       places.forEach((p, i) => { p.friend = fr[i % fr.length]; p.shake = 0; });
       peeks.clear();
+      decoys.clear();
+      if (level === 3) placeDecoys();
+    }
+
+    /** Level 3: the friends' hats go to places where Bubu is not. */
+    function placeDecoys() {
+      decoys.clear();
+      const free = E.shuffle(places.filter(p => p !== hideIn && !peeks.has(p)));
+      DECOYS.forEach((col, i) => { if (free[i]) decoys.set(free[i], col); });
+    }
+
+    /**
+     * Level 3: Bubu goes to another hiding place (never where a friend is
+     * out or where a friend's hat is), and the friends' hats move too.
+     */
+    function moveBubu(except) {
+      const free = places.filter(p => p !== hideIn && p !== except && !peeks.has(p) && !decoys.has(p));
+      if (free.length) hideIn = E.pick(free);
     }
 
     function lightsOff(seconds, icon) {
@@ -1585,7 +1634,8 @@
           this.pendingScene = undefined;
         }
         if (state === 'dark' && st <= 0) state = 'seek';
-        // level 3: every few seconds Bubu ducks (0.35 s) and comes up somewhere else (0.35 s)
+        // level 3: every few seconds ALL the hats duck (0.35 s) and come up
+        // somewhere else (0.35 s), so the movement does not show which one is Bubu
         if (level === 3 && state === 'seek' && !peeks.has(hideIn)) {
           if (moving < 0) {
             moveT += dt;
@@ -1594,8 +1644,9 @@
             const before = moving;
             moving += dt;
             if (before < 0.35 && moving >= 0.35) {
-              const free = places.filter(p => p !== hideIn && !peeks.has(p));
-              if (free.length) hideIn = E.pick(free);
+              decoys.clear();
+              moveBubu();
+              placeDecoys();
             }
             if (moving >= 0.7) { moving = -1; moveT = 0; nextMove = E.rand(3.5, 5); }
           }
@@ -1651,6 +1702,8 @@
             } else Art.emoji(c, pk.who, x, y, 96);
           } else if (bubuPeek && p === hideIn) {
             drawBubuPeek(c, p.tip, depth, sink);
+          } else if (bubuPeek && decoys.has(p)) {
+            drawBubuPeek(c, p.tip, depth, sink, decoys.get(p));
           }
           if (p.clip) c.restore();
           drawPlace(c, p, dx);
@@ -1722,6 +1775,10 @@
           flyStar = { x0: hit.to.x, y0: hit.to.y, t: 0, i: found };
         } else {
           peeks.set(hit, { who: hit.friend, t: 0 });
+          decoys.delete(hit);         // that friend comes out without the hat
+          // level 3: while the child looks at the friend, Bubu quietly
+          // changes her hiding place (no animation, so nothing gives her away)
+          if (level === 3 && moving < 0) moveBubu(hit);
         }
       }
       // no hint(): the game never shows the pointing hand

@@ -15,7 +15,7 @@ Jocul are **3 niveluri**, ca acei copii care termină repede să nu se plictisea
 
 1. Lui Bubu i se văd căciulița roșie și creștetul capului (ochii nu).
 2. Bubu se ascunde și mai bine: i se vede doar vârful căciuliței.
-3. La fel de ascunsă ca la nivelul 2, dar la fiecare câteva secunde se pitește și fuge în altă ascunzătoare.
+3. La fel de ascunsă ca la nivelul 2, dar din alte ascunzători ies și căciulile a doi prieteni: una verde (de spiriduș) și una albastră. Copiii trebuie să caute căciulița **roșie cu ciucure alb**. La fiecare câteva secunde toate căciulile se pitesc și apar în alte locuri, așa că mișcarea nu arată care e Bubu. Iar când copilul dă clic într-un loc greșit, Bubu se mută pe furiș în altă ascunzătoare, cât timp copilul se uită la prietenul care a ieșit.
 
 La finalul unui nivel apare jos un buton mare, verde, cu Bubu, o săgeată ▶ și steluțele nivelului următor (⭐⭐ sau ⭐⭐⭐). Butonul pornește nivelul următor. După nivelul 3, butonul are 🔁 și jocul o ia de la capăt, cu nivelul 1. Butonul ▶ de pe ecranul de start pornește tot nivelul 1.
 
